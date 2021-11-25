@@ -1,0 +1,12 @@
+#ifndef CMSWEBPLUGIN_GLOBAL_H
+#define CMSWEBPLUGIN_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(CMSWEBPLUGIN_LIBRARY)
+#define CMSWEBPLUGIN_EXPORT Q_DECL_EXPORT
+#else
+#define CMSWEBPLUGIN_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif  // CMSWEBPLUGIN_GLOBAL_H

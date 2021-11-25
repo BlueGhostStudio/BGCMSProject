@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>snippets/icons/01.png</file>
+        <file>snippets/icons/02.png</file>
+        <file>snippets/icons/03.png</file>
+        <file>snippets/icons/04.png</file>
+        <file>snippets/icons/05.png</file>
+        <file>snippets/BGCMS.json</file>
+        <file>snippets/Latex Snippet1.json</file>
+        <file>snippets/Latex Symbols.json</file>
+    </qresource>
+</RCC>

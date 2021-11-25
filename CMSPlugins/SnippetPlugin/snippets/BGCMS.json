@@ -1,0 +1,11 @@
+{
+    "label": "BGCMS",
+    "snippets": [
+        {
+            "icon": "",
+            "label": "PageTmpl",
+            "pos": 0,
+            "tex": "<pf-package>\n    <script data-fn=\"load\">\n        return Promise.resolve()\n            .then(() => {\n                return Promise.resolve(this.root);\n            });\n    </script>\n\n    <pf-page id=\"root\">\n    </pf-page>\n</pf-package>"
+        }
+    ]
+}

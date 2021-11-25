@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>CMSWidget</class>
+ <widget class="QWidget" name="CMSWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>302</width>
+    <height>485</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QHBoxLayout" name="ui_toolbarLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <property name="topMargin">
+      <number>0</number>
+     </property>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="CMSBrower" name="ui_lvBrower">
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>48</width>
+       <height>48</height>
+      </size>
+     </property>
+     <property name="flow">
+      <enum>QListView::LeftToRight</enum>
+     </property>
+     <property name="isWrapping" stdset="0">
+      <bool>true</bool>
+     </property>
+     <property name="spacing">
+      <number>6</number>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+  <action name="action_Back">
+   <property name="icon">
+    <iconset resource="bgcms.qrc">
+     <normaloff>:/imgs/back.png</normaloff>:/imgs/back.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Back</string>
+   </property>
+  </action>
+  <action name="actionFilterArticle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>文章</string>
+   </property>
+  </action>
+  <action name="actionFilterComponent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>组件</string>
+   </property>
+  </action>
+  <action name="actionFilterStyle">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>样式</string>
+   </property>
+  </action>
+  <action name="actionFilterMedia">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>媒体</string>
+   </property>
+  </action>
+  <action name="actionNew_Entry">
+   <property name="icon">
+    <iconset resource="bgcms.qrc">
+     <normaloff>:/imgs/new.png</normaloff>:/imgs/new.png</iconset>
+   </property>
+   <property name="text">
+    <string>新单元</string>
+   </property>
+  </action>
+  <action name="actionDelete_Entry">
+   <property name="icon">
+    <iconset resource="bgcms.qrc">
+     <normaloff>:/imgs/delete.png</normaloff>:/imgs/delete.png</iconset>
+   </property>
+   <property name="text">
+    <string>删除单元</string>
+   </property>
+  </action>
+  <action name="actionProperty">
+   <property name="icon">
+    <iconset resource="bgcms.qrc">
+     <normaloff>:/imgs/editProperty.png</normaloff>:/imgs/editProperty.png</iconset>
+   </property>
+   <property name="text">
+    <string>属性</string>
+   </property>
+  </action>
+  <action name="actionCopy_Image_URL">
+   <property name="text">
+    <string>复制图像链接</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy Image URL</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CMSBrower</class>
+   <extends>QListView</extends>
+   <header location="global">cmsbrower.h</header>
+   <slots>
+    <signal>hasCurrent(bool)</signal>
+    <signal>cmsMenu(QPoint)</signal>
+    <signal>entryMenu(QPoint)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="bgcms.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>ui_lvBrower</sender>
+   <signal>activated(QModelIndex)</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>browerDoubleClicked(QModelIndex)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>111</x>
+     <y>43</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>43</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_Back</sender>
+   <signal>triggered()</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>back()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDelete_Entry</sender>
+   <signal>triggered()</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>deleteEntry()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionProperty</sender>
+   <signal>triggered()</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>editProperty()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ui_lvBrower</sender>
+   <signal>cmsMenu(QPoint)</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>popupCMSMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>253</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ui_lvBrower</sender>
+   <signal>entryMenu(QPoint)</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>popupEntryMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>150</x>
+     <y>253</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNew_Entry</sender>
+   <signal>triggered()</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>newEntry()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCopy_Image_URL</sender>
+   <signal>triggered()</signal>
+   <receiver>CMSWidget</receiver>
+   <slot>copyImgURL()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>150</x>
+     <y>242</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>browerDoubleClicked(QModelIndex)</slot>
+  <slot>back()</slot>
+  <slot>newEntry()</slot>
+  <slot>editProperty()</slot>
+  <slot>deleteEntry()</slot>
+  <slot>popupCMSMenu(QPoint)</slot>
+  <slot>popupEntryMenu(QPoint)</slot>
+  <slot>copyImgURL()</slot>
+ </slots>
+</ui>

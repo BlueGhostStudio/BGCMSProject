@@ -1,0 +1,71 @@
+{
+    "label": "Latex Snippet1",
+    "snippets": [
+        {
+            "icon": "",
+            "label": "Insert tex block",
+            "pos": 8,
+            "tex": "<div>$$\n\n$$</div>"
+        },
+        {
+            "icon": "01.png",
+            "label": "",
+            "pos": 2,
+            "tex": "^{}"
+        },
+        {
+            "icon": "02.png",
+            "label": "",
+            "pos": 2,
+            "tex": "_{}"
+        },
+        {
+            "icon": "03.png",
+            "label": "",
+            "pos": 6,
+            "tex": "\\sqrt{}"
+        },
+        {
+            "icon": "04.png",
+            "label": "",
+            "pos": 6,
+            "tex": "\\sqrt[]{}"
+        },
+        {
+            "icon": "",
+            "label": "{x|x>0}",
+            "pos": 8,
+            "tex": "\\left\\{  \\mid \\right\\}"
+        },
+        {
+            "icon": "",
+            "label": "f(x)",
+            "pos": 7,
+            "tex": "f\\left(\\right)"
+        },
+        {
+            "icon": "05.png",
+            "label": "",
+            "pos": 24,
+            "tex": "\\left\\{\\begin{array}{l}\n  & \\\\\n  & \n\\end{array}\\right."
+        },
+        {
+            "icon": "",
+            "label": "text",
+            "pos": 6,
+            "tex": "\\text{}"
+        },
+        {
+            "icon": "",
+            "label": "多行",
+            "pos": 17,
+            "tex": "\\begin{array}{l}\n\n\\end{array}"
+        },
+        {
+            "icon": "",
+            "label": "换行",
+            "pos": 2,
+            "tex": "\\\\"
+        }
+    ]
+}
