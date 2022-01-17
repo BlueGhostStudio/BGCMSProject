@@ -133,7 +133,7 @@ BGCMSMainWin::changeViewMode(const QAction* action) {
 
 void
 BGCMSMainWin::connectToCMS() {
-    bgmrpcClient.connectToHost(QUrl("ws://122.114.67.199:8000"));
+    bgmrpcClient.connectToHost(QUrl("wss://122.114.67.199:8000"));
 }
 
 void
