@@ -18,6 +18,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(
   QT NAMES Qt6 Qt5
+  COMPONENTS Widgets LinguistTools
+  REQUIRED)
+find_package(
+  Qt${QT_VERSION_MAJOR}
+  COMPONENTS Widgets LinguistTools
+  REQUIRED)
+find_package(
+  QT NAMES Qt6 Qt5
   COMPONENTS Gui Widgets WebSockets
   REQUIRED)
 find_package(
@@ -25,55 +33,33 @@ find_package(
   COMPONENTS Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../CallGraph /usr/include/qt6
-                    ../../BGMRPCModule/BGMRPC/BGMRPCClient)
+set(TS_FILES BGCMS_zh_CN.ts)
+
+include_directories(../../CallGraph ../../BGMRPCModule/BGMRPC/BGMRPCClient)
 
 set(PROJECT_SOURCES
     main.cpp
     bgcms.qrc
-    bgcmsmainwin.h
-    bgcmsmainwin.cpp
-    bgcmsmainwin.ui
-    categorydialog.h
-    categorydialog.cpp
-    categorydialog.ui
-    cmsbrower.h
-    cmsbrower.cpp
-    cmsfilterproxymodel.h
-    cmsfilterproxymodel.cpp
-    cmssubwin.h
-    cmssubwin.cpp
-    cmswidget.h
-    cmswidget.cpp
-    cmswidget.ui
-    collectiondialog.h
-    collectiondialog.cpp
-    collectiondialog.ui
-    global.h
-    global.cpp
-    imgviewer.h
-    imgviewer.cpp
-    imgviewer.ui
-    logindialog.h
-    logindialog.cpp
-    logindialog.ui
-    pluginsubwin.h
-    pluginsubwin.cpp
-    resourcedialog.h
-    resourcedialog.cpp
-    resourcedialog.ui
-    resourceeditor.h
-    resourceeditor.cpp
-    resourceeditor.ui
-    ressubwin.h
-    ressubwin.cpp
-    ressubwinwidgetbase.h
-    ressubwinwidgetbase.cpp
-    subwinbase.h
-    subwinbase.cpp
-    subwinlist.h
-    subwinlist.cpp
-    cmsplugininterface.h)
+    mainwindow.cpp
+    mainwindow.h
+    mainwindow.ui
+    cmsapi.h
+    cmsapi.cpp
+    cmsbrowserbase.h
+    cmsbrowser.h
+    cmsbrowser.cpp
+    cmssortfiltermodel.h
+    cmssortfiltermodel.cpp
+    cmsdialog.h
+    cmsdialog.cpp
+    newnodedialog.h
+    newnodedialog.cpp
+    newnodedialog.ui
+    preferencesdialog.h
+    preferencesdialog.cpp
+    preferencesdialog.ui
+    ../CMSPlugins/cmsplugininterface.h
+    ${TS_FILES})
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   qt_add_executable(BGCMS MANUAL_FINALIZATION ${PROJECT_SOURCES})
@@ -81,6 +67,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
   # APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
   # ${CMAKE_CURRENT_SOURCE_DIR}/android) For more information, see
   # https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+
+  qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
   if(ANDROID)
     add_library(BGCMS SHARED ${PROJECT_SOURCES})
@@ -89,16 +77,18 @@ else()
   else()
     add_executable(BGCMS ${PROJECT_SOURCES})
   endif()
+
+  qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
 target_link_libraries(
   BGCMS
   PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::WebSockets
-          Qt${QT_VERSION_MAJOR}::Gui CallGraph BGMRPCClient qscintilla2_qt6)
+          Qt${QT_VERSION_MAJOR}::Gui CallGraph BGMRPCClient)
 
 set_target_properties(
   BGCMS
-  PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
+  PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER cms.bgstudio.tk
              MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
              MACOSX_BUNDLE_SHORT_VERSION_STRING
              ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
@@ -106,6 +96,3 @@ set_target_properties(
 if(QT_VERSION_MAJOR EQUAL 6)
   qt_finalize_executable(BGCMS)
 endif()
-
-install(TARGETS BGMRPCCtrl
-    RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR})

@@ -1,18 +1,24 @@
 <RCC>
     <qresource prefix="/">
-        <file>imgs/article.png</file>
         <file>imgs/back.png</file>
-        <file>imgs/category.png</file>
-        <file>imgs/collection.png</file>
-        <file>imgs/component.png</file>
         <file>imgs/delete.png</file>
         <file>imgs/editProperty.png</file>
-        <file>imgs/media.png</file>
         <file>imgs/new.png</file>
         <file>imgs/save.png</file>
-        <file>imgs/style.png</file>
-        <file>imgs/home.png</file>
         <file>imgs/find.png</file>
         <file>imgs/appicon.png</file>
+        <file>imgs/connected.png</file>
+        <file>imgs/disconnected.png</file>
+        <file>imgs/article.png</file>
+        <file>imgs/category.png</file>
+        <file>imgs/cut.png</file>
+        <file>imgs/copy.png</file>
+        <file>imgs/paste.png</file>
+        <file>imgs/root.png</file>
+        <file>imgs/audio.png</file>
+        <file>imgs/image.png</file>
+        <file>imgs/video.png</file>
+        <file>imgs/zoom1_1.png</file>
+        <file>imgs/zoomfit.png</file>
     </qresource>
 </RCC>
