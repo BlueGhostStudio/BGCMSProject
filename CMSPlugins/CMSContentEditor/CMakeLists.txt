@@ -18,24 +18,33 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient
-                    /usr/include/qt6)
+include_directories(../../CallGraph ../../BGMRPCClient /usr/include/qt6)
 
-add_library(CMSContentEditor SHARED CMSContentEditor_global.h
-                                    cmscontenteditor.cpp cmscontenteditor.h
-                                    editorwindow.h editorwindow.cpp editorwindow.ui
-                                    newnodedlg.h newnodedlg.cpp newnodedlg.ui
-                                    icons.qrc
-                                    ../../BGCMS/cmsdialog.h
-                                    ../../BGCMS/cmsdialog.cpp
-                                    ../../BGCMS/cmsapi.h
-                                    ../../BGCMS/cmsapi.cpp)
+add_library(
+  CMSContentEditor SHARED
+  CMSContentEditor_global.h
+  cmscontenteditor.cpp
+  cmscontenteditor.h
+  editorwindow.h
+  editorwindow.cpp
+  editorwindow.ui
+  newnodedlg.h
+  newnodedlg.cpp
+  newnodedlg.ui
+  icons.qrc
+  ../../BGCMS/cmsdialog.h
+  ../../BGCMS/cmsdialog.cpp
+  ../../BGCMS/cmsapi.h
+  ../../BGCMS/cmsapi.cpp)
 
 target_link_libraries(
   CMSContentEditor
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::WebSockets
-          Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Widgets
-           CallGraph BGMRPCClient qscintilla2_qt6)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core
+          Qt${QT_VERSION_MAJOR}::WebSockets
+          Qt${QT_VERSION_MAJOR}::Gui
+          Qt${QT_VERSION_MAJOR}::Widgets
+          CallGraph
+          BGMRPCClient
+          qscintilla2_qt6)
 
 target_compile_definitions(CMSContentEditor PRIVATE CMSCONTENTEDITOR_LIBRARY)

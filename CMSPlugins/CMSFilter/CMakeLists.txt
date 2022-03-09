@@ -18,8 +18,7 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../../CallGraph ../../BGMRPCClient)
 
 add_library(CMSFilter SHARED CMSFilter_global.h cmsfilter.cpp cmsfilter.h
                              filterform.h filterform.cpp filterform.ui)

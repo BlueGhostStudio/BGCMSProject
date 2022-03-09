@@ -587,11 +587,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="mainwindow.ui" line="14"/>
         <source>BGCMS</source>
         <translation type="unfinished"></translation>
@@ -688,61 +683,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="24"/>
-        <source>wss://127.0.0.1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="27"/>
-        <source>Url</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="37"/>
-        <source>8000</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="40"/>
-        <source>Port</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="50"/>
-        <source>Connect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="84"/>
-        <source>Remote Object</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="91"/>
-        <source>Exec</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="94"/>
-        <source>Ctrl+Return</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="101"/>
-        <source>Methods</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="111"/>
-        <source>Args:[]</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="124"/>
-        <source>toolBar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="mainwindow.cpp" line="61"/>
         <location filename="mainwindow.cpp" line="141"/>
         <source>Login fail</source>
@@ -785,17 +725,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="277"/>
+        <location filename="mainwindow.cpp" line="286"/>
         <source>Load plugin fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="315"/>
+        <location filename="mainwindow.cpp" line="329"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="315"/>
+        <location filename="mainwindow.cpp" line="329"/>
         <source>token</source>
         <translation type="unfinished"></translation>
     </message>

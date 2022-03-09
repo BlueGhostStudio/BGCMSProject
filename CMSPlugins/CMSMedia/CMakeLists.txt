@@ -18,8 +18,7 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets Network
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../../CallGraph ../../BGMRPCClient)
 
 add_library(
   CMSMedia SHARED

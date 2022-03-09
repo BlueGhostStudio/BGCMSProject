@@ -18,8 +18,7 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../../CallGraph ../../BGMRPCClient)
 
 add_library(RPCLog SHARED RPCLog_global.h rpclog.h rpclog.cpp)
 

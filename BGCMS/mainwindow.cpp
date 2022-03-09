@@ -236,46 +236,60 @@ MainWindow::initial() {
 
 void
 MainWindow::initialPlugins() {
-    QDir pluginsDir(
+    /*QDir pluginsDir(
         QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
         "/plugins");
 
-    for (QFileInfo& pluginFile : pluginsDir.entryInfoList(QDir::Files)) {
-        qDebug() << pluginFile.absoluteFilePath();
-        QPluginLoader loader(pluginFile.absoluteFilePath());
-        loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
-        QObject* instance = loader.instance();
-        CMSPluginInterface* obj = qobject_cast<CMSPluginInterface*>(instance);
-        if (obj) {
-            qDebug() << pluginFile.fileName() << "load ok";
-            /*QWidget* pluginWidget =
-                obj->initial(&m_api, ui_cmsBrowser, m_newNodeMenu);*/
-            pluginUI _pluginUI;
-            _pluginUI.newNodeMenu = m_newNodeMenu;
-            _pluginUI.pluginsMenu = ui_menu_plugins;
-            _pluginUI.settingMenu = ui_menu_settings;
-            _pluginUI.pluginsToolbar = ui_tb_plugins;
-            _pluginUI = obj->initial(&m_api, ui_cmsBrowser, _pluginUI);
-            QWidget* pluginDocker = _pluginUI.docker;
-            QObject::connect(instance, SIGNAL(logMessage(QString, int)), this,
-                             SLOT(statusMessage(QString, int)));
-            QObject::connect(instance, SIGNAL(working(bool)), this,
-                             SLOT(uiWorkStatus(bool)));
-            if (pluginDocker) {
-                qDebug() << "has plugin widget";
-                QDockWidget* pluginDock = new QDockWidget;
-                bool ok = false;
-                int area = pluginDocker->property("dockWidgetArea").toInt(&ok);
-                pluginDock->setObjectName(pluginDocker->objectName());
-                pluginDock->setWindowTitle(pluginDocker->windowTitle());
-                pluginDock->setWidget(pluginDocker);
-                addDockWidget(
-                    ok ? (Qt::DockWidgetArea)area : Qt::RightDockWidgetArea,
-                    pluginDock);
-            }
-        } else
-            statusMessage(tr("Load plugin fail"));
-    }
+    qDebug() << QStandardPaths::standardLocations(
+        QStandardPaths::AppLocalDataLocation);*/
+
+    auto loadPlugins = [=](const QString& location) {
+        qDebug() << location + "/plugins";
+        QDir pluginsDir(location + "/plugins");
+
+        for (QFileInfo& pluginFile : pluginsDir.entryInfoList(QDir::Files)) {
+            qDebug() << pluginFile.absoluteFilePath();
+            QPluginLoader loader(pluginFile.absoluteFilePath());
+            loader.setLoadHints(QLibrary::ResolveAllSymbolsHint);
+            QObject* instance = loader.instance();
+            CMSPluginInterface* obj =
+                qobject_cast<CMSPluginInterface*>(instance);
+            if (obj) {
+                qDebug() << pluginFile.fileName() << "load ok";
+                /*QWidget* pluginWidget =
+                    obj->initial(&m_api, ui_cmsBrowser, m_newNodeMenu);*/
+                pluginUI _pluginUI;
+                _pluginUI.newNodeMenu = m_newNodeMenu;
+                _pluginUI.pluginsMenu = ui_menu_plugins;
+                _pluginUI.settingMenu = ui_menu_settings;
+                _pluginUI.pluginsToolbar = ui_tb_plugins;
+                _pluginUI = obj->initial(&m_api, ui_cmsBrowser, _pluginUI);
+                QWidget* pluginDocker = _pluginUI.docker;
+                QObject::connect(instance, SIGNAL(logMessage(QString, int)),
+                                 this, SLOT(statusMessage(QString, int)));
+                QObject::connect(instance, SIGNAL(working(bool)), this,
+                                 SLOT(uiWorkStatus(bool)));
+                if (pluginDocker) {
+                    qDebug() << "has plugin widget";
+                    QDockWidget* pluginDock = new QDockWidget;
+                    bool ok = false;
+                    int area =
+                        pluginDocker->property("dockWidgetArea").toInt(&ok);
+                    pluginDock->setObjectName(pluginDocker->objectName());
+                    pluginDock->setWindowTitle(pluginDocker->windowTitle());
+                    pluginDock->setWidget(pluginDocker);
+                    addDockWidget(
+                        ok ? (Qt::DockWidgetArea)area : Qt::RightDockWidgetArea,
+                        pluginDock);
+                }
+            } else
+                statusMessage(tr("Load plugin fail"));
+        }
+    };
+
+    foreach (const QString& location, QStandardPaths::standardLocations(
+                                          QStandardPaths::AppLocalDataLocation))
+        loadPlugins(location);
 }
 
 void

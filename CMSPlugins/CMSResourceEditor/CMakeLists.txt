@@ -18,14 +18,12 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../../CallGraph ../../BGMRPCClient)
 
 add_library(
   CMSResourceEditor SHARED
-  icons.qrc
-  CMSResourceEditor_global.h cmsresourceeditor.cpp cmsresourceeditor.h
-  ../../BGCMS/cmsapi.h ../../BGCMS/cmsapi.cpp)
+  icons.qrc CMSResourceEditor_global.h cmsresourceeditor.cpp
+  cmsresourceeditor.h ../../BGCMS/cmsapi.h ../../BGCMS/cmsapi.cpp)
 
 target_link_libraries(
   CMSResourceEditor

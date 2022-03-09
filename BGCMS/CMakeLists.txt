@@ -35,7 +35,8 @@ find_package(
 
 set(TS_FILES BGCMS_zh_CN.ts)
 
-include_directories(../../CallGraph ../../BGMRPCModule/BGMRPC/BGMRPCClient)
+#include_directories(../../CallGraph ../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../CallGraph ../BGMRPCClient)
 
 set(PROJECT_SOURCES
     main.cpp

@@ -18,17 +18,18 @@ find_package(
   COMPONENTS Core Gui Widgets WebSockets
   REQUIRED)
 
-include_directories(../../../CallGraph
-                    ../../../BGMRPCModule/BGMRPC/BGMRPCClient)
+include_directories(../../CallGraph ../../BGMRPCClient)
 
-add_library(CMSNodeInfo SHARED
+add_library(
+  CMSNodeInfo SHARED
   CMSNodeInfo_global.h
   cmsnodeinfo.cpp
   cmsnodeinfo.h
   ../../BGCMS/cmsapi.h
   ../../BGCMS/cmsapi.cpp
-  infoform.h infoform.cpp infoform.ui
-)
+  infoform.h
+  infoform.cpp
+  infoform.ui)
 
 target_link_libraries(
   CMSNodeInfo
