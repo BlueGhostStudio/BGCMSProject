@@ -38,6 +38,10 @@ set(TS_FILES BGCMS_zh_CN.ts)
 #include_directories(../../CallGraph ../../BGMRPCModule/BGMRPC/BGMRPCClient)
 include_directories(../CallGraph ../BGMRPCClient)
 
+include(../BGCMS.cmake)
+
+add_compile_definitions(DATALOCATION="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/BGStudio/BGCMS")
+
 set(PROJECT_SOURCES
     main.cpp
     bgcms.qrc
@@ -92,8 +96,17 @@ set_target_properties(
   PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER cms.bgstudio.tk
              MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
              MACOSX_BUNDLE_SHORT_VERSION_STRING
-             ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR})
+             ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+             OUTPUT_NAME BGCMS
+             INSTALL_RPATH_USE_LINK_PATH ON
+             INSTALL_RPATH ${CMSRPATH})
 
 if(QT_VERSION_MAJOR EQUAL 6)
   qt_finalize_executable(BGCMS)
 endif()
+
+install(
+  TARGETS BGCMS
+  RUNTIME
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
+    COMPONENT BGCMS)

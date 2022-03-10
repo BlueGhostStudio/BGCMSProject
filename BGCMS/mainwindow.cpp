@@ -287,8 +287,17 @@ MainWindow::initialPlugins() {
         }
     };
 
-    foreach (const QString& location, QStandardPaths::standardLocations(
-                                          QStandardPaths::AppLocalDataLocation))
+    QStringList dataLocations =
+        QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
+
+#ifdef DATALOCATION
+    if (!dataLocations.contains(DATALOCATION))
+        dataLocations.append(DATALOCATION);
+
+    qDebug() << DATALOCATION;
+#endif
+
+    foreach (const QString& location, dataLocations)
         loadPlugins(location);
 }
 

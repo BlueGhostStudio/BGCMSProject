@@ -149,6 +149,7 @@
     </property>
     <addaction name="action_copy"/>
     <addaction name="action_cut"/>
+    <addaction name="action_paste"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>

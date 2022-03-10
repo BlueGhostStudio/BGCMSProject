@@ -273,22 +273,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="163"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="164"/>
         <source>Save</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="172"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="173"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="181"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="182"/>
         <source>C&amp;ut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="190"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="191"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
@@ -507,22 +507,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="76"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="79"/>
         <source>Name</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="81"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="84"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="101"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="104"/>
         <source>Own</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="91"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="94"/>
         <source>Hide</source>
         <translation type="unfinished"></translation>
     </message>
@@ -532,54 +532,54 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="86"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="89"/>
         <source>Content Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="96"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="99"/>
         <source>Private</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="106"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="109"/>
         <source>Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="111"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="114"/>
         <source>Modified Date</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="116"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="119"/>
         <source>Seq</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="121"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="124"/>
         <source>Value</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="187"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="190"/>
         <source>Summary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="211"/>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="260"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="214"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="263"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="224"/>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="270"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="227"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="273"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="239"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="242"/>
         <source>Extended Data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -730,13 +730,73 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="329"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="329"/>
+        <location filename="mainwindow.cpp" line="338"/>
         <source>token</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="14"/>
+        <source>MainWindow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="24"/>
+        <source>wss://127.0.0.1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="27"/>
+        <source>Url</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="37"/>
+        <source>8000</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="40"/>
+        <source>Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="50"/>
+        <source>Connect</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="84"/>
+        <source>Remote Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="91"/>
+        <source>Exec</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="94"/>
+        <source>Ctrl+Return</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="101"/>
+        <source>Methods</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="111"/>
+        <source>Args:[]</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../BGMRPCModule/BGMRPCConsole/mainwindow.ui" line="124"/>
+        <source>toolBar</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
