@@ -29,6 +29,20 @@ MainWindow::closeEvent(QCloseEvent* /*ev*/) {
 }
 
 void
+MainWindow::setCMSGrp() {
+    bool ok;
+    QString grp =
+        QInputDialog::getText(this, tr("Instance of CMS"), tr("Instance Name"),
+                              QLineEdit::Normal, m_api.grp(), &ok);
+    if (ok) {
+        m_api.setGrp(grp);
+        QSettings settings;
+        settings.setValue("remote/group", grp);
+        m_api.disconnectFromHost();
+    }
+}
+
+void
 MainWindow::connect2Host() {
     m_api.connectToHost(QUrl("wss://rpc.bgstudio.tk:8000"));
 }
@@ -97,9 +111,9 @@ MainWindow::newBlankNode() {
 
 void
 MainWindow::initial() {
-    /*QMenu* newNodeMenu = new QMenu();
-    newNodeMenu->addAction("test");
-    newNodeMenu->setDefault(action_new);*/
+    QSettings settings;
+
+    m_api.setGrp(settings.value("remote/group").toString());
     QToolButton* tbtnNewNode = new QToolButton;
     tbtnNewNode->setDefaultAction(action_new);
 
@@ -229,20 +243,12 @@ MainWindow::initial() {
 
     initialPlugins();
 
-    QSettings settings;
     restoreState(settings.value("winState").toByteArray());
     restoreGeometry(settings.value("geometry").toByteArray());
 }
 
 void
 MainWindow::initialPlugins() {
-    /*QDir pluginsDir(
-        QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) +
-        "/plugins");
-
-    qDebug() << QStandardPaths::standardLocations(
-        QStandardPaths::AppLocalDataLocation);*/
-
     auto loadPlugins = [=](const QString& location) {
         qDebug() << location + "/plugins";
         QDir pluginsDir(location + "/plugins");
@@ -256,8 +262,7 @@ MainWindow::initialPlugins() {
                 qobject_cast<CMSPluginInterface*>(instance);
             if (obj) {
                 qDebug() << pluginFile.fileName() << "load ok";
-                /*QWidget* pluginWidget =
-                    obj->initial(&m_api, ui_cmsBrowser, m_newNodeMenu);*/
+
                 pluginUI _pluginUI;
                 _pluginUI.newNodeMenu = m_newNodeMenu;
                 _pluginUI.pluginsMenu = ui_menu_plugins;

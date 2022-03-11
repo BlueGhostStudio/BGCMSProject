@@ -12,6 +12,8 @@ int
 main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
+    QApplication::setWindowIcon(QIcon(":/imgs/appicon.png"));
+
     QApplication::setOrganizationName("BGStudio");
     QApplication::setOrganizationDomain("bgstudio.org");
     QApplication::setApplicationName("BGCMS");

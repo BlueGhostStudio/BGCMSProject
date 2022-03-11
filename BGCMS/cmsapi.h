@@ -29,6 +29,10 @@ class CMSApi : public NS_BGMRPCClient::BGMRPCClient {
 public:
     CMSApi(QObject* parent = nullptr);
 
+    QString grp() const;
+    void setGrp(const QString& grp);
+    QString CMSObjID(const QString& obj);
+
     void join(QPointer<CallGraph> pcg, const QString& to);
     void login(const QString& token, QPointer<CallGraph> pcg, const QString& to,
                const QString& error);
@@ -63,6 +67,9 @@ signals:
     void nodeUpdated(int id, const QVariantMap& node);
     void nodeCopied(const QVariantMap& node);
     void nodeMoved(const QVariantMap& node, const QVariant& targetNode);
+
+private:
+    QString m_grp;
 
     /*private:
         NS_BGMRPCClient::BGMRPCClient m_client;*/

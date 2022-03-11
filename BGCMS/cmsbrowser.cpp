@@ -129,38 +129,6 @@ CMSBrowser::initial(CMSApi* api) {
             if (index.isValid()) m_cmsModel.removeRow(index.row());
             if (isListNode(targetNode)) addNodeListItem(node);
         });
-    /*QObject::connect(
-        m_cmsClient, &NS_BGMRPCClient::BGMRPCClient::remoteSignal, this,
-        [=](const QString& obj, const QString& sig, const QJsonArray& args) {
-            qDebug() << obj << sig << args;
-            if (obj == "CMS") {
-                if (sig == "nodeCreated") {
-                    QVariantMap node =
-                        args[0].toVariant().toMap()["node"].toMap();
-                    if (isListNode(node["pid"])) addNodeListItem(node);
-                } else if (sig == "nodeRemoved") {
-                    QModelIndex index = findNodeListItem(args[0].toVariant());
-                    if (index.isValid()) m_cmsModel.removeRow(index.row());
-                } else if (sig == "nodeUpdated") {
-                    int id = args[0].toInt();
-                    QVariantMap node =
-                        args[1].toVariant().toMap()["node"].toMap();
-                    QModelIndex index = findNodeListItem(id);
-                    updateNodeListItem(index.row(), node);
-                    // qDebug() << "---" << id << node;
-                } else if (sig == "nodeCopied") {
-                    QVariantMap node =
-                        args[0].toVariant().toMap()["node"].toMap();
-                    if (isListNode(node["pid"])) addNodeListItem(node);
-                } else if (sig == "nodeMoved") {
-                    QVariantMap node =
-                        args[0].toVariant().toMap()["node"].toMap();
-                    QModelIndex index = findNodeListItem(node["id"]);
-                    if (index.isValid()) m_cmsModel.removeRow(index.row());
-                    if (isListNode(args[1].toVariant())) addNodeListItem(node);
-                }
-            }
-        });*/
 }
 
 bool

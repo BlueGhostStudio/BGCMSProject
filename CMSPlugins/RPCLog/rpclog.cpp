@@ -68,6 +68,14 @@ RPCLog::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
                 tr("<strong style=\"color:#990\">[SIGNAL]</strong>") + obj +
                 "." + sig);
         });
+    QObject::connect(
+        m_api, &CMSApi::error, this, [=](const QJsonDocument& data) {
+            QVariantMap errorData = data.toVariant().toMap();
+            m_logBrowser->append(
+                tr("<strong style=\"color:#f00\">[ERROR]</strong>") +
+                m_callHistory.take(errorData["mID"].toString()).toString() +
+                " - " + errorData["error"].toString());
+        });
 
     QObject::connect(m_cmsBrowser, SIGNAL(logMessage(QString)), this,
                      SLOT(browserMessage(QString)));

@@ -24,7 +24,7 @@ CMSApi::CMSApi(QObject* parent) : NS_BGMRPCClient::BGMRPCClient(parent) {
     QObject::connect(
         this, &CMSApi::remoteSignal, this,
         [=](const QString& obj, const QString& sig, const QJsonArray& args) {
-            if (obj == "CMS") {
+            if (obj == CMSObjID("main")) {
                 if (sig == "nodeCreated")
                     emit nodeCreated(
                         args[0].toVariant().toMap()["node"].toMap());
@@ -49,12 +49,30 @@ CMSApi::CMSApi(QObject* parent) : NS_BGMRPCClient::BGMRPCClient(parent) {
         });
 }
 
+QString
+CMSApi::grp() const {
+    return m_grp;
+}
+
+void
+CMSApi::setGrp(const QString& grp) {
+    m_grp = grp;
+}
+
+QString
+CMSApi::CMSObjID(const QString& obj) {
+    QString objID = "cms::" + obj;
+    if (!m_grp.isEmpty())
+        return m_grp + "::" + objID;
+    else
+        return objID;
+}
+
 void
 CMSApi::join(QPointer<CallGraph> pcg, const QString& to) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "join", {})->then([=](const QVariant& ret) {
-            pcg->to(to, ret.toList()[0]);
-        });
+        callMethod(CMSObjID("main"), "join", {})
+            ->then([=](const QVariant& ret) { pcg->to(to, ret.toList()[0]); });
 }
 
 void
@@ -75,7 +93,7 @@ CMSApi::addNode(const QVariant& pNode, const QVariantMap& nodeData,
                 QPointer<CallGraph> pcg, const QString& to,
                 const QString& error) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "newNode", { pNode, nodeData })
+        callMethod(CMSObjID("main"), "newNode", { pNode, nodeData })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
@@ -92,7 +110,7 @@ CMSApi::removeNode(const QVariant& node, QPointer<CallGraph> pcg,
         if (!pcg.isNull() && !error.isEmpty())
             pcg->to(error, "can't remove \'..\' node");
     } else if (!pcg.isNull() && !to.isEmpty())  //{
-        callMethod("CMS", "removeNode", { node })
+        callMethod(CMSObjID("main"), "removeNode", { node })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
@@ -106,51 +124,55 @@ void
 CMSApi::node(const QVariant& node, QPointer<CallGraph> pcg, const QString& to,
              const QString& error) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "node", { node })->then([=](const QVariant& ret) {
-            QVariantMap d = ret.toList()[0].toMap();
-            if (d["ok"].toBool()) {
-                if (!pcg.isNull()) pcg->to(to, d["node"]);
-            } else if (!pcg.isNull() && !error.isEmpty())
-                pcg->to(error, d["error"]);
-        });
+        callMethod(CMSObjID("main"), "node", { node })
+            ->then([=](const QVariant& ret) {
+                QVariantMap d = ret.toList()[0].toMap();
+                if (d["ok"].toBool()) {
+                    if (!pcg.isNull()) pcg->to(to, d["node"]);
+                } else if (!pcg.isNull() && !error.isEmpty())
+                    pcg->to(error, d["error"]);
+            });
 }
 
 void
 CMSApi::nodeInfo(const QVariant& node, QPointer<CallGraph> pcg,
                  const QString& to, const QString& error) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "nodeInfo", { node })->then([=](const QVariant& ret) {
-            QVariantList retList = ret.toList();
-            QVariantMap ret0 = retList[0].toMap();
+        callMethod(CMSObjID("main"), "nodeInfo", { node })
+            ->then([=](const QVariant& ret) {
+                QVariantList retList = ret.toList();
+                QVariantMap ret0 = retList[0].toMap();
 
-            if (ret0["ok"].toBool()) {
-                if (!pcg.isNull()) pcg->to(to, ret0["node"]);
-            } else if (!pcg.isNull() && !error.isEmpty())
-                pcg->to(error, ret0["error"]);
-        });
+                if (ret0["ok"].toBool()) {
+                    if (!pcg.isNull()) pcg->to(to, ret0["node"]);
+                } else if (!pcg.isNull() && !error.isEmpty())
+                    pcg->to(error, ret0["error"]);
+            });
 }
 
 void
 CMSApi::nodePath(const QVariant& node, QPointer<CallGraph> pcg,
                  const QString& to) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "nodePath", { node })->then([=](const QVariant& ret) {
-            if (!pcg.isNull()) pcg->to(to, ret.toList()[0]);
-        });
+        callMethod(CMSObjID("main"), "nodePath", { node })
+            ->then([=](const QVariant& ret) {
+                if (!pcg.isNull()) pcg->to(to, ret.toList()[0]);
+            });
 }
 
 void
 CMSApi::loadNodes(const QVariant& pNode, QPointer<CallGraph> pcg,
                   const QString& to, const QString& error) {
     if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "list", { pNode })->then([=](const QVariant& ret) {
-            QVariant d = ret.toList()[0];
-            QVariantMap m = d.toMap();
-            if (m["ok"].toBool()) {
-                if (!pcg.isNull()) pcg->to(to, d);
-            } else if (!pcg.isNull() && !error.isEmpty())
-                pcg->to(error, d);
-        });
+        callMethod(CMSObjID("main"), "list", { pNode })
+            ->then([=](const QVariant& ret) {
+                QVariant d = ret.toList()[0];
+                QVariantMap m = d.toMap();
+                if (m["ok"].toBool()) {
+                    if (!pcg.isNull()) pcg->to(to, d);
+                } else if (!pcg.isNull() && !error.isEmpty())
+                    pcg->to(error, d);
+            });
 }
 
 void
@@ -158,7 +180,7 @@ CMSApi::updateNode(const QVariant& node, const QVariantMap& newData,
                    QPointer<CallGraph> pcg, const QString& to,
                    const QString& error) {
     if (pcg && !to.isEmpty())
-        callMethod("CMS", "updateNode", { node, newData })
+        callMethod(CMSObjID("main"), "updateNode", { node, newData })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
@@ -176,7 +198,7 @@ CMSApi::moveNode(const QVariant& source, const QVariant& target,
         if (!pcg.isNull() && !error.isEmpty())
             pcg->to(error, "can't move \'..\' node");
     } else if (!pcg.isNull() && !to.isEmpty())
-        callMethod("CMS", "moveNode", { source, target })
+        callMethod(CMSObjID("main"), "moveNode", { source, target })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
@@ -194,7 +216,7 @@ CMSApi::copyNode(const QVariant& source, const QVariant& target,
         if (!pcg.isNull() && !error.isEmpty())
             pcg->to(error, "can't copy \'..\' node");
     } else if (pcg && !to.isEmpty())
-        callMethod("CMS", "copyNode", { source, target })
+        callMethod(CMSObjID("main"), "copyNode", { source, target })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {

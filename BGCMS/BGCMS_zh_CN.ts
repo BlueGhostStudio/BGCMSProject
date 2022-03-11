@@ -103,23 +103,23 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cmsbrowser.cpp" line="213"/>
-        <location filename="cmsbrowser.cpp" line="270"/>
-        <location filename="cmsbrowser.cpp" line="298"/>
-        <location filename="cmsbrowser.cpp" line="347"/>
-        <location filename="cmsbrowser.cpp" line="374"/>
-        <location filename="cmsbrowser.cpp" line="542"/>
-        <location filename="cmsbrowser.cpp" line="603"/>
+        <location filename="cmsbrowser.cpp" line="181"/>
+        <location filename="cmsbrowser.cpp" line="238"/>
+        <location filename="cmsbrowser.cpp" line="266"/>
+        <location filename="cmsbrowser.cpp" line="315"/>
+        <location filename="cmsbrowser.cpp" line="342"/>
+        <location filename="cmsbrowser.cpp" line="510"/>
+        <location filename="cmsbrowser.cpp" line="571"/>
         <source>ERROR: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cmsbrowser.cpp" line="249"/>
+        <location filename="cmsbrowser.cpp" line="217"/>
         <source>Remove nodes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cmsbrowser.cpp" line="250"/>
+        <location filename="cmsbrowser.cpp" line="218"/>
         <source>Do you really want to delete the selected nodes?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -151,7 +151,7 @@
 <context>
     <name>CMSFilter</name>
     <message>
-        <location filename="../CMSPlugins/CMSFilter/cmsfilter.cpp" line="32"/>
+        <location filename="../CMSPlugins/CMSFilter/cmsfilter.cpp" line="57"/>
         <source>CMS Filter</source>
         <translation type="unfinished"></translation>
     </message>
@@ -202,32 +202,32 @@
 <context>
     <name>CMSMediaApi</name>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="107"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="109"/>
         <source>is not resource</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="122"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="126"/>
         <source>Unknow type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="138"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="142"/>
         <source>get img fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="144"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="148"/>
         <source>is not Url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="163"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="167"/>
         <source>file no exist.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="262"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmediaapi.cpp" line="272"/>
         <source>Can not remove Media</source>
         <translation type="unfinished"></translation>
     </message>
@@ -567,19 +567,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="214"/>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="263"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="217"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="269"/>
         <source>Reset</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="227"/>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="273"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="230"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="279"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="242"/>
+        <location filename="../CMSPlugins/CMSNodeInfo/infoform.ui" line="245"/>
         <source>Extended Data</source>
         <translation type="unfinished"></translation>
     </message>
@@ -592,150 +592,156 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="85"/>
+        <location filename="mainwindow.ui" line="89"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="96"/>
+        <location filename="mainwindow.ui" line="100"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="125"/>
+        <location filename="mainwindow.ui" line="129"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="110"/>
-        <location filename="mainwindow.ui" line="144"/>
+        <location filename="mainwindow.ui" line="114"/>
+        <location filename="mainwindow.ui" line="148"/>
         <source>Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="104"/>
+        <location filename="mainwindow.ui" line="108"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="155"/>
+        <location filename="mainwindow.ui" line="159"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="172"/>
+        <location filename="mainwindow.ui" line="176"/>
         <source>Connect to host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="181"/>
+        <location filename="mainwindow.ui" line="185"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="186"/>
+        <location filename="mainwindow.ui" line="190"/>
         <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="195"/>
+        <location filename="mainwindow.ui" line="199"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="204"/>
+        <location filename="mainwindow.ui" line="208"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="213"/>
+        <location filename="mainwindow.ui" line="217"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="222"/>
+        <location filename="mainwindow.ui" line="226"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="231"/>
+        <location filename="mainwindow.ui" line="235"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="236"/>
+        <location filename="mainwindow.ui" line="240"/>
         <source>Change Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="241"/>
+        <location filename="mainwindow.ui" line="245"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="250"/>
+        <location filename="mainwindow.ui" line="254"/>
         <source>Root Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="255"/>
-        <source>Preferences</source>
+        <location filename="mainwindow.ui" line="259"/>
+        <location filename="mainwindow.cpp" line="35"/>
+        <source>Instance of CMS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="61"/>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="35"/>
+        <source>Instance Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="75"/>
+        <location filename="mainwindow.cpp" line="155"/>
         <source>Login fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="89"/>
+        <location filename="mainwindow.cpp" line="103"/>
         <source>ERROR: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="106"/>
+        <location filename="mainwindow.cpp" line="120"/>
         <source>New node</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="162"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>Disconnected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="180"/>
         <source>Connecting...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="169"/>
+        <location filename="mainwindow.cpp" line="183"/>
         <source>Connected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="203"/>
+        <location filename="mainwindow.cpp" line="217"/>
         <source>Calling </source>
         <oldsource>Calling [</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="214"/>
+        <location filename="mainwindow.cpp" line="228"/>
         <source>Signal </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="286"/>
+        <location filename="mainwindow.cpp" line="291"/>
         <source>Load plugin fail</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="338"/>
+        <location filename="mainwindow.cpp" line="343"/>
         <source>Login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="338"/>
+        <location filename="mainwindow.cpp" line="343"/>
         <source>token</source>
         <translation type="unfinished"></translation>
     </message>
@@ -919,7 +925,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/RPCLog/rpclog.cpp" line="83"/>
+        <location filename="../CMSPlugins/RPCLog/rpclog.cpp" line="75"/>
+        <source>&lt;strong style=&quot;color:#f00&quot;&gt;[ERROR]&lt;/strong&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/RPCLog/rpclog.cpp" line="91"/>
         <source>&lt;strong style=&quot;color:#900&quot;&gt;[browser]&lt;/strong&gt;</source>
         <translation type="unfinished"></translation>
     </message>

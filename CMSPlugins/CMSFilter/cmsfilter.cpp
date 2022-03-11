@@ -28,8 +28,6 @@ CMSFilter::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
     CMSPluginInterface::initial(api, browser);
 
     m_filterForm = new FilterForm;
-    m_filterForm->setObjectName("CMSFilter");
-    m_filterForm->setWindowTitle(tr("CMS Filter"));
 
     m_filterForm->updateContentTypeList();
     QString settingsFile = QSettings().fileName();
@@ -54,6 +52,9 @@ CMSFilter::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
     });
 
     pluginUI _pluginUI;
+
+    m_filterForm->setObjectName("CMSFilter");
+    m_filterForm->setWindowTitle(tr("CMS Filter"));
     _pluginUI.docker = m_filterForm;
 
     return _pluginUI;

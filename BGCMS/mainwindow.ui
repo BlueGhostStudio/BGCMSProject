@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>BGCMS</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="bgcms.qrc">
+    <normaloff>:/imgs/appicon.png</normaloff>:/imgs/appicon.png</iconset>
+  </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
   </property>
@@ -103,7 +107,7 @@
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionPreferences"/>
+    <addaction name="action_remoteObjectGroup"/>
    </widget>
    <widget class="QMenu" name="ui_menu_plugins">
     <property name="title">
@@ -250,9 +254,9 @@
     <string>Root Directory</string>
    </property>
   </action>
-  <action name="actionPreferences">
+  <action name="action_remoteObjectGroup">
    <property name="text">
-    <string>Preferences</string>
+    <string>Instance of CMS</string>
    </property>
   </action>
  </widget>
@@ -469,6 +473,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_remoteObjectGroup</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>setCMSGrp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>connect2Host()</slot>
@@ -476,5 +496,6 @@
   <slot>nodeDoubleClicked(QModelIndex)</slot>
   <slot>newBlankNode()</slot>
   <slot>changeAccount()</slot>
+  <slot>setCMSGrp()</slot>
  </slots>
 </ui>

@@ -24,6 +24,8 @@ protected:
     void closeEvent(QCloseEvent*) override;
 
 private slots:
+    void setCMSGrp();
+
     void connect2Host();
     void disconnect();
 
