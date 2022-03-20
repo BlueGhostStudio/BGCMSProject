@@ -22,6 +22,7 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QProgressDialog>
+#include <QWindow>
 
 CMSMedia::CMSMedia(QObject* parent) : QObject(parent) {}
 
@@ -154,13 +155,30 @@ CMSMedia::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
 
 void
 CMSMedia::openMedia(const QVariantMap& node) {
-    ImageViewer* viewer = new ImageViewer(qApp->activeWindow());
+    auto raiseOpenedWin = [=]() -> bool {
+        bool opened = false;
+        foreach (QWindow* win, qApp->allWindows()) {
+            QWidget* winWid = QWidget::find(win->winId());
+            if (winWid && winWid->property("nodeID") == node["id"]) {
+                win->raise();
+                opened = true;
+                break;
+            }
+        };
+
+        return opened;
+    };
+
     if (node["type"] == "R") {
         QString contentType = node["contentType"].toString();
         if (m_settings.value("contentType/image")
                 .toList()
                 .contains(contentType)) {
-            viewer->loadImage(&m_mediaApi, node);
+            if (!raiseOpenedWin()) {
+                ImageViewer* viewer = new ImageViewer(qApp->activeWindow());
+                viewer->setProperty("nodeID", node["id"]);
+                viewer->loadImage(&m_mediaApi, node);
+            }
         } else if (m_settings.value("contentType/media")
                        .toList()
                        .contains(contentType)) {

@@ -52,7 +52,7 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_exit"/>
+    <addaction name="action_close"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -74,9 +74,9 @@
    <addaction name="action_fitInView"/>
    <addaction name="action_zoom1_1"/>
   </widget>
-  <action name="action_exit">
+  <action name="action_close">
    <property name="text">
-    <string>E&amp;xit</string>
+    <string>&amp;Close</string>
    </property>
   </action>
   <action name="action_fitInView">
@@ -103,7 +103,7 @@
  </resources>
  <connections>
   <connection>
-   <sender>action_exit</sender>
+   <sender>action_close</sender>
    <signal>triggered()</signal>
    <receiver>ImageViewer</receiver>
    <slot>close()</slot>

@@ -127,23 +127,49 @@
 <context>
     <name>CMSContentEditor</name>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="46"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="47"/>
         <source>Source</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="51"/>
-        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="66"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="52"/>
+        <source>Editor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="54"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="69"/>
         <source>Source Content Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="66"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="69"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="98"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="123"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="149"/>
         <source>Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="104"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="80"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="98"/>
+        <source>Syntax - html</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="106"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="123"/>
+        <source>Syntax - markdown</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="131"/>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="149"/>
+        <source>Syntax - css</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/cmscontenteditor.cpp" line="186"/>
         <source>ERROR: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -159,42 +185,42 @@
 <context>
     <name>CMSMedia</name>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="81"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="82"/>
         <source>Media</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="83"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="84"/>
         <source>Media Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="98"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="99"/>
         <source>Media Content Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="98"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="99"/>
         <source>Types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="107"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="108"/>
         <source>Copy Media Url</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="175"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="193"/>
         <source>Post Media</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="177"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="195"/>
         <source>Image(*.png *.jpg *.jpeg *.bmp *.xpm);;Audio(*.mp3 *.ogg *.flac</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="185"/>
+        <location filename="../CMSPlugins/CMSMedia/cmsmedia.cpp" line="203"/>
         <source>Posting Media</source>
         <translation type="unfinished"></translation>
     </message>
@@ -233,6 +259,14 @@
     </message>
 </context>
 <context>
+    <name>CMSPathHistory</name>
+    <message>
+        <location filename="../CMSPlugins/CMSPathHistory/cmspathhistory.cpp" line="29"/>
+        <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CMSResourceEditor</name>
     <message>
         <location filename="../CMSPlugins/CMSResourceEditor/cmsresourceeditor.cpp" line="30"/>
@@ -263,32 +297,97 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="142"/>
-        <source>&amp;File</source>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="150"/>
+        <source>Find text</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="148"/>
-        <source>&amp;Edit</source>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="160"/>
+        <source>Find</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="164"/>
-        <source>Save</source>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="163"/>
+        <source>F3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="173"/>
+        <source>Find backwards</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="176"/>
+        <source>Shift+F3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="183"/>
+        <source>Replace Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="193"/>
+        <source>Replace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="196"/>
+        <source>Ctrl+=</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="216"/>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="224"/>
+        <source>&amp;Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="243"/>
+        <source>Main</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="269"/>
+        <source>&amp;Save</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="272"/>
+        <source>Ctrl+S</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="304"/>
+        <source>&amp;Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="313"/>
+        <source>&amp;Undo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="322"/>
+        <source>&amp;Redo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="281"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="182"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="290"/>
         <source>C&amp;ut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="191"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.ui" line="299"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
@@ -298,17 +397,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="104"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="67"/>
+        <source>Find/Replace</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="151"/>
         <source>BGCMS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="205"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="287"/>
         <source>Content has modified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="205"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="287"/>
         <source>Save it?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -470,7 +574,7 @@
     </message>
     <message>
         <location filename="../CMSPlugins/CMSMedia/imageviewer.ui" line="79"/>
-        <source>E&amp;xit</source>
+        <source>&amp;Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -592,93 +696,93 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="89"/>
+        <location filename="mainwindow.ui" line="92"/>
         <source>&amp;File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="100"/>
+        <location filename="mainwindow.ui" line="103"/>
         <source>&amp;Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="129"/>
+        <location filename="mainwindow.ui" line="132"/>
         <source>Main</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="114"/>
-        <location filename="mainwindow.ui" line="148"/>
+        <location filename="mainwindow.ui" line="117"/>
+        <location filename="mainwindow.ui" line="151"/>
         <source>Plugins</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="108"/>
+        <location filename="mainwindow.ui" line="111"/>
         <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="159"/>
+        <location filename="mainwindow.ui" line="162"/>
         <source>Path</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="176"/>
+        <location filename="mainwindow.ui" line="179"/>
         <source>Connect to host</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="185"/>
+        <location filename="mainwindow.ui" line="188"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="190"/>
+        <location filename="mainwindow.ui" line="193"/>
         <source>Disconnect</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="199"/>
+        <location filename="mainwindow.ui" line="202"/>
         <source>New</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="208"/>
+        <location filename="mainwindow.ui" line="211"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="217"/>
+        <location filename="mainwindow.ui" line="220"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="226"/>
+        <location filename="mainwindow.ui" line="229"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="235"/>
+        <location filename="mainwindow.ui" line="238"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="240"/>
+        <location filename="mainwindow.ui" line="243"/>
         <source>Change Account</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="245"/>
+        <location filename="mainwindow.ui" line="248"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="254"/>
+        <location filename="mainwindow.ui" line="257"/>
         <source>Root Directory</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="259"/>
+        <location filename="mainwindow.ui" line="262"/>
         <location filename="mainwindow.cpp" line="35"/>
         <source>Instance of CMS</source>
         <translation type="unfinished"></translation>

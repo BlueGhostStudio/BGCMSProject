@@ -45,9 +45,16 @@ private:
 private slots:
     void save(QPointer<CallGraph> pcg = nullptr, const QString& to = QString(),
               const QString& error = QString());
+    void find();
+    void findBackwards();
+    void replace();
 
 protected:
     void closeEvent(QCloseEvent* event) override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
+
+signals:
+    void showFindPanel();
 
 private:
     QVariantMap m_node;
@@ -59,6 +66,8 @@ private:
     //    QsciLexerHTML m_lexerHTML;
     QsciLexerXML m_lexerHTML;
     QsciLexerCSS m_lexerCSS;
+
+    QString m_windowTitle;
 };
 
 #endif  // EDITORWINDOW_H

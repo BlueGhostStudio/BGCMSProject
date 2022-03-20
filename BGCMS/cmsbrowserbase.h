@@ -22,6 +22,8 @@
 #include <QStandardItemModel>
 #include <QTableView>
 
+#include "callgraph.h"
+
 #define __MIME_COPY__ "cms/copy-nodes"
 #define __MIME_CUT__ "cms/cut-nodes"
 #define __MIME_PLUGIN__ "cms/plugin"
@@ -33,6 +35,9 @@ public:
 
     virtual void setFilter(
         std::function<bool(QAbstractItemModel*, int)> callback) = 0;
+    virtual void load(const QVariant& pNode, QPointer<CallGraph> pcg = nullptr,
+                      const QString& to = QString(),
+                      const QString& err = QString()) = 0;
     virtual QVariant listNode() = 0;
     virtual QVariantMap currentNode() = 0;
 

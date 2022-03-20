@@ -20,5 +20,7 @@
         <file>imgs/video.png</file>
         <file>imgs/zoom1_1.png</file>
         <file>imgs/zoomfit.png</file>
+        <file>imgs/undo.png</file>
+        <file>imgs/redo.png</file>
     </qresource>
 </RCC>

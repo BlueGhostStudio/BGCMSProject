@@ -23,6 +23,7 @@
 #include <QInputDialog>
 #include <QLabel>
 #include <QRegularExpression>
+#include <QWindow>
 
 #include "editorwindow.h"
 #include "newnodedlg.h"
@@ -48,7 +49,9 @@ CMSContentEditor::initial(CMSApi* api, CMSBrowserBase* browser,
 
     updateNewNodeMenu();
 
-    ui.settingMenu->addAction(tr("Source Content Types"), this, [=]() {
+    QMenu* editMenu = ui.settingMenu->addMenu(tr("Editor"));
+
+    editMenu->addAction(tr("Source Content Types"), this, [=]() {
         QString typesText;
         bool begin = true;
         foreach (const QVariant& type,
@@ -70,6 +73,85 @@ CMSContentEditor::initial(CMSApi* api, CMSBrowserBase* browser,
             m_settings.setValue("contentType/source", typesText.split(","));
             updateNewNodeMenu();
         }
+    });
+
+    editMenu->addSeparator();
+
+    editMenu->addAction(tr("Syntax - html"), this, [=]() {
+        QString syntaxsText;
+        bool begin = true;
+        foreach (const QVariant& type,
+                 m_settings
+                     .value("contentEditor/syntax/html",
+                            QVariantList({ "html", "fra", "cmp", "pkg" }))
+                     .toList()) {
+            if (begin)
+                begin = false;
+            else
+                syntaxsText += ',';
+
+            syntaxsText += type.toString();
+        }
+
+        bool ok;
+        syntaxsText = QInputDialog::getText(
+            qApp->activeWindow(), tr("Syntax - html"), tr("Types"),
+            QLineEdit::Normal, syntaxsText, &ok);
+
+        if (ok)
+            m_settings.setValue("contentEditor/syntax/html",
+                                syntaxsText.split(","));
+    });
+
+    editMenu->addAction(tr("Syntax - markdown"), this, [=]() {
+        QString syntaxsText;
+        bool begin = true;
+        foreach (
+            const QVariant& type,
+            m_settings.value("contentEditor/syntax/md", QVariantList({ "md" }))
+                .toList()) {
+            if (begin)
+                begin = false;
+            else
+                syntaxsText += ',';
+
+            syntaxsText += type.toString();
+        }
+
+        bool ok;
+        syntaxsText = QInputDialog::getText(
+            qApp->activeWindow(), tr("Syntax - markdown"), tr("Types"),
+            QLineEdit::Normal, syntaxsText, &ok);
+
+        if (ok)
+            m_settings.setValue("contentEditor/syntax/md",
+                                syntaxsText.split(","));
+    });
+
+    editMenu->addAction(tr("Syntax - css"), this, [=]() {
+        QString syntaxsText;
+        bool begin = true;
+        foreach (const QVariant& type,
+                 m_settings
+                     .value("contentEditor/syntax/css",
+                            QVariantList({ "css", "style" }))
+                     .toList()) {
+            if (begin)
+                begin = false;
+            else
+                syntaxsText += ',';
+
+            syntaxsText += type.toString();
+        }
+
+        bool ok;
+        syntaxsText = QInputDialog::getText(
+            qApp->activeWindow(), tr("Syntax - css"), tr("Types"),
+            QLineEdit::Normal, syntaxsText, &ok);
+
+        if (ok)
+            m_settings.setValue("contentEditor/syntax/css",
+                                syntaxsText.split(","));
     });
 
     QObject::connect(m_cmsBrowser, SIGNAL(nodeItemDoubleClicked(QVariantMap)),
@@ -132,8 +214,20 @@ CMSContentEditor::openNode(const QVariantMap& node) {
         if (m_settings.value("contentType/source")
                 .toList()
                 .contains(contentType)) {
-            EditorWindow* win = new EditorWindow(m_api);
-            win->load(node, contentType);
+            bool opened = false;
+            foreach (QWindow* win, qApp->allWindows()) {
+                QWidget* winWid = QWidget::find(win->winId());
+                if (winWid && winWid->property("nodeID") == node["id"]) {
+                    win->raise();
+                    opened = true;
+                    break;
+                }
+            };
+            if (!opened) {
+                EditorWindow* win = new EditorWindow(m_api);
+                win->setProperty("nodeID", node["id"]);
+                win->load(node, contentType);
+            }
         }
     }
 }

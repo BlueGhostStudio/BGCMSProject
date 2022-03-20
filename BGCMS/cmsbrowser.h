@@ -41,7 +41,8 @@ public:
 
     bool hasSelection() const;
     void load(const QVariant& pNode, QPointer<CallGraph> pcg = nullptr,
-              const QString& to = QString(), const QString& err = QString());
+              const QString& to = QString(),
+              const QString& err = QString()) override;
     void setFilter(
         std::function<bool(QAbstractItemModel*, int)> callback) override;
 

@@ -24,7 +24,7 @@ CMSNodeInfo::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
     CMSPluginInterface::initial(api, browser);
     pluginUI _pluginUI;
     m_infoForm = new InfoForm();
-    m_infoForm->setObjectName("testInfo");
+    m_infoForm->setObjectName("CMSNodeInfo");
     m_infoForm->setWindowTitle("Node Info");
     _pluginUI.docker = m_infoForm;
 

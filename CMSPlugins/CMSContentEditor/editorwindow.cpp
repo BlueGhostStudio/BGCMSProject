@@ -22,7 +22,9 @@
 #include <QClipboard>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QSettings>
 #include <QToolButton>
+#include <QWindow>
 
 EditorWindow::EditorWindow(CMSApi* api, QWidget* parent)
     : QMainWindow(parent), m_api(api), m_defaultFont(QFont("Monospace", 12)) {
@@ -38,19 +40,39 @@ EditorWindow::EditorWindow(CMSApi* api, QWidget* parent)
     showExtButton->setIcon(QIcon(":/drop_down.png"));
     ui_menubar->setCornerWidget(showExtButton);
 
-    action_save->setEnabled(false);
-    QObject::connect(ui_contentEditor, &QsciScintilla::modificationChanged,
-                     this, [=]() { action_save->setEnabled(isModified()); });
-    QObject::connect(ui_pteSummary, &QPlainTextEdit::modificationChanged, this,
-                     [=]() { action_save->setEnabled(isModified()); });
-    QObject::connect(ui_pteExtData, &QPlainTextEdit::modificationChanged, this,
-                     [=]() { action_save->setEnabled(isModified()); });
+    QObject::connect(
+        ui_contentEditor, &QsciScintilla::modificationChanged, this, [=]() {
+            setWindowTitle(m_windowTitle + (isModified() ? "*" : ""));
+            action_save->setEnabled(isModified());
+        });
+    QObject::connect(
+        ui_pteSummary, &QPlainTextEdit::modificationChanged, this, [=]() {
+            setWindowTitle(m_windowTitle + (isModified() ? "*" : ""));
+            action_save->setEnabled(isModified());
+        });
+    QObject::connect(
+        ui_pteExtData, &QPlainTextEdit::modificationChanged, this, [=]() {
+            setWindowTitle(m_windowTitle + (isModified() ? "*" : ""));
+            action_save->setEnabled(isModified());
+        });
 
     QClipboard* clipboard = QGuiApplication::clipboard();
     action_paste->setEnabled(clipboard->mimeData()->hasText());
     QObject::connect(clipboard, &QClipboard::dataChanged, this, [=]() {
         action_paste->setEnabled(clipboard->mimeData()->hasText());
     });
+
+    ui_widFind->setVisible(false);
+    QToolButton* showFindButton = new QToolButton(this);
+    showFindButton->setText(tr("Find/Replace"));
+    showFindButton->setCheckable(true);
+    ui_statusbar->addPermanentWidget(showFindButton);
+    QObject::connect(showFindButton, &QToolButton::toggled, ui_widFind,
+                     &QWidget::setVisible);
+    QObject::connect(this, &EditorWindow::showFindPanel, this,
+                     [=]() { showFindButton->setChecked(true); });
+
+    ui_contentEditor->installEventFilter(this);
 
     initialEditor();
 }
@@ -83,26 +105,51 @@ EditorWindow::load(const QVariantMap& _node, const QString& type) {
                                                 QsciScintilla::STYLE_BRACEBAD,
                                                 m_defaultFont.pointSize());
 
-                if (type.contains(QRegularExpression("^(html|pkg|fra|cmp)$")))
+                /*if (type.contains(QRegularExpression("^(html|pkg|fra|cmp)$")))
                     ui_contentEditor->setLexer(&m_lexerHTML);
                 else if (type.contains(QRegularExpression("^(css|style)$")))
                     ui_contentEditor->setLexer(&m_lexerCSS);
                 else if (type == "md")
+                    ui_contentEditor->setLexer(&m_lexerMarkdown);*/
+
+                QSettings settings;
+                if (settings
+                        .value("contentEditor/syntax/html",
+                               QVariantList({ "html", "fra", "cmp", "pkg" }))
+                        .toList()
+                        .contains(type))
+                    ui_contentEditor->setLexer(&m_lexerHTML);
+                else if (settings
+                             .value("contentEditor/syntax/md",
+                                    QVariantList({ "md" }))
+                             .toList()
+                             .contains(type))
                     ui_contentEditor->setLexer(&m_lexerMarkdown);
+                else if (settings
+                             .value("contentEditor/syntax/css",
+                                    QVariantList({ "css", "style" }))
+                             .toList()
+                             .contains(type))
+                    ui_contentEditor->setLexer(&m_lexerCSS);
 
                 m_node = data.toMap();
                 ui_contentEditor->setText(m_node["content"].toString());
                 ui_contentEditor->setModified(false);
                 ui_pteSummary->setPlainText(m_node["summary"].toString());
                 ui_pteExtData->setPlainText(m_node["extData"].toString());
+
+                action_undo->setEnabled(false);
+                action_redo->setEnabled(false);
+                action_save->setEnabled(false);
                 show();
 
                 m_api->nodePath(m_node["id"], cg, "setWinTitle");
             })
         ->nodes("setWinTitle",
                 [=](QPointer<CallGraph> cg, const QVariant& data) {
-                    setWindowTitle(tr("BGCMS") + " - " +
-                                   data.toMap()["str"].toString());
+                    m_windowTitle =
+                        tr("BGCMS") + " - " + data.toMap()["str"].toString();
+                    setWindowTitle(m_windowTitle);
                     cg->toFinal();
                 })
         ->nodes("error",
@@ -129,11 +176,17 @@ EditorWindow::initialEditor() {
     ui_contentEditor->setMarginWidth(0, "01234");
     ui_contentEditor->setFolding(QsciScintilla::CircledTreeFoldStyle);
 
+    QObject::connect(ui_contentEditor, &QsciScintilla::textChanged, [=]() {
+        action_undo->setEnabled(ui_contentEditor->isUndoAvailable());
+        action_redo->setEnabled(ui_contentEditor->isRedoAvailable());
+    });
+
     m_lexerHTML.setAutoIndentStyle(QsciScintilla::AiClosing |
                                    QsciScintilla::AiOpening);
     m_lexerHTML.setFont(m_defaultFont);
     m_lexerHTML.setScriptsStyled(true);
-    //    m_lexerHTML.setFoldCompact(false);
+    m_lexerHTML.setFoldCompact(false);
+    m_lexerHTML.setFoldPreprocessor(true);
 
     m_lexerCSS.setAutoIndentStyle(QsciScintilla::AiClosing |
                                   QsciScintilla::AiOpening);
@@ -172,10 +225,14 @@ EditorWindow::save(QPointer<CallGraph> pcg, const QString& to,
         ->nodes("save",
                 [=](QPointer<CallGraph> cg, const QVariant& data) {
                     // qDebug() << ui_contentEditor->text();
+                    QString content = ui_contentEditor->text();
+                    content.remove(QRegularExpression(
+                        "\\x20+$", QRegularExpression::MultilineOption));
+
                     m_api->updateNode(
                         m_node["id"],
                         QVariantMap(
-                            { { "content", ui_contentEditor->text() },
+                            { { "content", content },
                               { "summary", ui_pteSummary->toPlainText() },
                               { "extData", ui_pteExtData->toPlainText() } }),
                         cg, "updateNode", "error");
@@ -196,6 +253,31 @@ EditorWindow::save(QPointer<CallGraph> pcg, const QString& to,
                 cg->toFinal();
             })
         ->exec();
+}
+
+void
+EditorWindow::find() {
+    ui_contentEditor->findFirst(ui_leFindText->text(), true, false, true, true);
+    ui_contentEditor->setFocus();
+}
+
+void
+EditorWindow::findBackwards() {
+    if (ui_contentEditor->hasSelectedText())
+        ui_contentEditor->SendScintilla(
+            QsciScintilla::SCI_GOTOPOS,
+            ui_contentEditor->SendScintilla(
+                QsciScintilla::SCI_GETSELECTIONSTART));
+
+    ui_contentEditor->findFirst(ui_leFindText->text(), true, false, true, true,
+                                false);
+    ui_contentEditor->setFocus();
+}
+
+void
+EditorWindow::replace() {
+    ui_contentEditor->replace(ui_leReplaceText->text());
+    ui_contentEditor->findNext();
 }
 
 void
@@ -221,4 +303,20 @@ EditorWindow::closeEvent(QCloseEvent* event) {
             event->ignore();
     } else
         event->accept();
+}
+
+bool
+EditorWindow::eventFilter(QObject* watched, QEvent* event) {
+    if (watched == ui_contentEditor && event->type() == QEvent::KeyPress) {
+        QKeyEvent* kev = static_cast<QKeyEvent*>(event);
+        if (kev->matches(QKeySequence::Find)) {
+            // ui_widFind->show();
+            emit showFindPanel();
+            ui_leFindText->setText(ui_contentEditor->selectedText());
+            ui_leFindText->setFocus();
+            return true;
+        } else
+            return false;
+    } else
+        return QMainWindow::eventFilter(watched, event);
 }
