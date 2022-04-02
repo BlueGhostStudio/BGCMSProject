@@ -267,6 +267,25 @@
     </message>
 </context>
 <context>
+    <name>CMSPreview</name>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/cmspreview.cpp" line="32"/>
+        <source>Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/cmspreview.cpp" line="44"/>
+        <location filename="../CMSPlugins/CMSPreview/cmspreview.cpp" line="48"/>
+        <source>Preview Url</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/cmspreview.cpp" line="48"/>
+        <source>Url</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>CMSResourceEditor</name>
     <message>
         <location filename="../CMSPlugins/CMSResourceEditor/cmsresourceeditor.cpp" line="30"/>
@@ -407,12 +426,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="287"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="288"/>
         <source>Content has modified</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="287"/>
+        <location filename="../CMSPlugins/CMSContentEditor/editorwindow.cpp" line="288"/>
         <source>Save it?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -988,6 +1007,30 @@
     <message>
         <location filename="preferencesdialog.ui" line="39"/>
         <source>CMS Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>PreviewWindow</name>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/backup/previewwindow.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/backup/previewwindow.cpp" line="46"/>
+        <location filename="../CMSPlugins/CMSPreview/previewwindow.cpp" line="50"/>
+        <source>Web Preview - </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/previewwindow.ui" line="14"/>
+        <source>MainWindow</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/CMSPreview/previewwindow.ui" line="53"/>
+        <source>Develop Tools</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1,7 +1,7 @@
 /*****************************************************************************
  * %{Cpp:License:FileName}
  *
- * Created: 2022/3/19 2022 by blueghost
+ * Created: 2022/3/20 2022 by blueghost
  *
  * Copyright 2022 blueghost. All rights reserved.
  *
@@ -15,33 +15,31 @@
  * contact the author of this file, or the owner of the project in which
  * this file belongs to.
  *****************************************************************************/
-#ifndef CMSPATHHISTORY_H
-#define CMSPATHHISTORY_H
-
-#include <QListWidget>
+#ifndef CMSPREVIEW_H
+#define CMSPREVIEW_H
 
 #include "../cmsplugininterface.h"
-#include "CMSPathHistory_global.h"
+#include "CMSPreview_global.h"
+#include "previewwindow.h"
 
-class CMSPATHHISTORY_EXPORT CMSPathHistory : public QObject,
-                                             public CMSPluginInterface {
+class CMSPREVIEW_EXPORT CMSPreview : public QObject, public CMSPluginInterface {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.bgstudio.BGCMS.CMSPluginInterface" FILE
-                          "CMSPathHistory.json")
+                          "CMSPreview.json")
     Q_INTERFACES(CMSPluginInterface)
 
 public:
-    CMSPathHistory(QObject* parent = nullptr);
+    CMSPreview(QObject* parent = nullptr);
 
     pluginUI initial(CMSApi* api, CMSBrowserBase* browser,
                      const pluginUI& ui) override;
 
 private slots:
-    void addPath(const QString& path);
+    void changeCurrentPath(const QString& path);
 
 private:
-    QListWidget* m_historyList;
+    PreviewWindow* m_previewWindow;
     QString m_currentPath;
 };
 
-#endif  // CMSPATHHISTORY_H
+#endif  // CMSPREVIEW_H

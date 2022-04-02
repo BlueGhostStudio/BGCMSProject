@@ -38,9 +38,10 @@ CMSPathHistory::initial(CMSApi* api, CMSBrowserBase* browser,
 
     QObject::connect(m_cmsBrowser, SIGNAL(pathChanged(QString)), this,
                      SLOT(addPath(QString)));
-    QObject::connect(m_historyList, &QListWidget::currentItemChanged, this,
-                     [=](QListWidgetItem* current, QListWidgetItem*) {
-                         m_cmsBrowser->load(current->text());
+    QObject::connect(m_historyList, &QListWidget::itemClicked, this,
+                     [=](QListWidgetItem* item) {
+                         QString path = item->text();
+                         if (path != m_currentPath) m_cmsBrowser->load(path);
                      });
 
     _pluginUI.docker = m_historyList;
@@ -50,6 +51,7 @@ CMSPathHistory::initial(CMSApi* api, CMSBrowserBase* browser,
 
 void
 CMSPathHistory::addPath(const QString& path) {
+    m_currentPath = path;
     QList<QListWidgetItem*> exist =
         m_historyList->findItems(path, Qt::MatchExactly);
     if (exist.count() > 0)

@@ -191,7 +191,8 @@ EditorWindow::initialEditor() {
     m_lexerCSS.setAutoIndentStyle(QsciScintilla::AiClosing |
                                   QsciScintilla::AiOpening);
     m_lexerCSS.setFont(m_defaultFont);
-    m_lexerCSS.setHSSLanguage(true);
+    // m_lexerCSS.setHSSLanguage(true);
+    m_lexerCSS.setLessLanguage(true);
     m_lexerCSS.setFoldCompact(false);
 
     m_lexerMarkdown.setFont(m_defaultFont);
