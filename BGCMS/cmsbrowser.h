@@ -40,7 +40,7 @@ public:
     void initial(CMSApi* api);
 
     bool hasSelection() const;
-    void load(const QVariant& pNode, QPointer<CallGraph> pcg = nullptr,
+    void load(const QVariant& pNode, CallGraph* pcg = nullptr,
               const QString& to = QString(),
               const QString& err = QString()) override;
     void setFilter(
@@ -65,6 +65,7 @@ public slots:
     void copySelectedNodes();
     void cutSelectedNodes();
     void paste();
+    void pasteRef();
 
 private slots:
     void onNodeItemDoubleClicked(const QModelIndex& index);
@@ -72,6 +73,7 @@ private slots:
 
 private:
     QByteArray selectedNodesMimeData();
+    void copyNodeTextMimeData(QMimeData* mimeData);
 
     bool isListNode(const QVariant& pID);
     QVariantMap nodeData(const QModelIndex& index);

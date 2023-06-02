@@ -165,13 +165,13 @@ CMSContentEditor::newSourceNode(const QString& contentType,
                                 const QString& content) {
     CallGraph::start("openDlg", this)
         ->nodes("openDlg",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     newNodeDlg* dlg = new newNodeDlg(cg, contentType, "accept",
                                                      "", qApp->activeWindow());
                     dlg->open();
                 })
         ->nodes("accept",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     /*m_api->addNode(m_cmsBrowser->listNode(), data.toMap(), cg,
                                   "end", "error");*/
                     qDebug() << m_cmsBrowser->listNode() << data;
@@ -181,14 +181,14 @@ CMSContentEditor::newSourceNode(const QString& contentType,
                                    "openEditor", "error");
                 })
         ->nodes("error",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     // statusMessage(tr("ERROR: ") + data.toString());
                     emit logMessage(tr("ERROR: ") + data.toString());
 
                     cg->toFinal();
                 })
         ->nodes("openEditor",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     openNode(data.toMap());
 
                     cg->toFinal();

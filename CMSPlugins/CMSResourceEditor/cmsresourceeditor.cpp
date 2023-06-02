@@ -41,12 +41,12 @@ CMSResourceEditor::initial(CMSApi* api, CMSBrowserBase* browser,
         QVariantMap node = m_cmsBrowser->currentNode();
         CallGraph::start("getNodeContent", this)
             ->nodes("getNodeContent",
-                    [=](QPointer<CallGraph> cg, const QVariant&) {
+                    [=](CallGraph* cg, const QVariant&) {
                         qDebug() << node;
                         m_api->node(node["id"], cg, "openEditor", "error");
                     })
             ->nodes("openEditor",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         bool ok = false;
                         QString content = QInputDialog::getMultiLineText(
                             qApp->activeWindow(), tr("Resource"), tr("Content"),
@@ -54,15 +54,15 @@ CMSResourceEditor::initial(CMSApi* api, CMSBrowserBase* browser,
                         if (ok) cg->to("saveChanged", content);
                     })
             ->nodes("saveChanged",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         m_api->updateNode(node["id"],
                                           QVariantMap({ { "content", data } }),
                                           cg, "end", "error");
                     })
-            ->nodes("end", [=](QPointer<CallGraph> cg,
+            ->nodes("end", [=](CallGraph* cg,
                                const QVariant&) { cg->toFinal(); })
             ->nodes("error",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         qDebug() << "error" << data;
                     })
             ->exec();

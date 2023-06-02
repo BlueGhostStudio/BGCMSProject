@@ -63,6 +63,9 @@ set(PROJECT_SOURCES
     preferencesdialog.h
     preferencesdialog.cpp
     preferencesdialog.ui
+    hosturldialog.cpp
+    hosturldialog.h
+    hosturldialog.ui
     ../CMSPlugins/cmsplugininterface.h
     ${TS_FILES})
 

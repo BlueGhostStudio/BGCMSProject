@@ -121,31 +121,35 @@ CMSMedia::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
         QVariantMap node = m_cmsBrowser->currentNode();
         CallGraph::start("getNodeContent", this)
             ->nodes("getNodeContent",
-                    [=](QPointer<CallGraph> cg, const QVariant&) {
+                    [=](CallGraph* cg, const QVariant&) {
                         m_api->node(node["id"], cg, "copyUrl", "error");
                     })
             ->nodes(
                 "copyUrl",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     QString content = data.toMap()["content"].toString();
                     //                        m_mediaApi.getImgUrl(content,)
                     CallGraph::start("getUrl", this)
                         ->nodes("getUrl",
-                                [=](QPointer<CallGraph> cg, const QVariant&) {
+                                [=](CallGraph* cg, const QVariant&) {
                                     m_mediaApi.getImgUrl(content, cg, "copyUrl",
                                                          "error");
                                 })
                         ->nodes(
                             "copyUrl",
-                            [=](QPointer<CallGraph> cg, const QVariant& data) {
+                            [=](CallGraph* cg, const QVariant& data) {
                                 qDebug() << "-----" << data;
                                 clipboard->setText(data.toString());
+                                cg->toFinal();
                             },
                             "error",
-                            [=](QPointer<CallGraph> cg, const QVariant& data) {
+                            [=](CallGraph* cg, const QVariant& data) {
                                 qDebug() << data;
+                                cg->toFinal();
                             })
                         ->exec();
+
+                    cg->toFinal();
                 })
             ->exec();
     });

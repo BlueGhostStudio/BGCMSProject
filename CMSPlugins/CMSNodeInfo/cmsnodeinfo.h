@@ -36,7 +36,7 @@ public:
                      const pluginUI& ui) override;
 
 private slots:
-    void setFormEnabled();
+    void updateNodeInfo();
     void updateSummary(const QString& summary);
     void updateExtData(const QString& extData);
 

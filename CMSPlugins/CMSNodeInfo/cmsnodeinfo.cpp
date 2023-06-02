@@ -29,10 +29,12 @@ CMSNodeInfo::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
     _pluginUI.docker = m_infoForm;
 
     m_infoForm->setEnabled(false);
+    QObject::connect(m_cmsBrowser, SIGNAL(pathChanged(QString)), this,
+                     SLOT(updateNodeInfo()));
     QObject::connect(m_cmsBrowser,
                      SIGNAL(selectedNodeChanged(const QItemSelection&,
                                                 const QItemSelection&)),
-                     this, SLOT(setFormEnabled()));
+                     this, SLOT(updateNodeInfo()));
 
     QObject::connect(m_api, &CMSApi::nodeUpdated, this,
                      [=](int id, const QVariantMap& node) {
@@ -51,31 +53,29 @@ CMSNodeInfo::initial(CMSApi* api, CMSBrowserBase* browser, const pluginUI& ui) {
 }
 
 void
-CMSNodeInfo::setFormEnabled() {
-    /*int nID = currentNode();
-    bool hasSelection = m_cmsBrowser->selectionModel()->hasSelection();
-    m_infoForm->setEnabled(hasSelection && nID > 0);*/
-
+CMSNodeInfo::updateNodeInfo() {
     bool hasSelection = m_cmsBrowser->selectionModel()->hasSelection();
 
-    if (hasSelection) {
+    qDebug() << "------ updateNodeInfo -------";
+
+    /*if (hasSelection) {
         QVariantMap node = m_cmsBrowser->currentNode();
         int nID = node["id"].toInt();
         if (nID > 0) {
             CallGraph::start("getNodeInfo", this)
                 ->nodes("getNodeInfo",
-                        [=](QPointer<CallGraph> cg, const QVariant&) {
+                        [=](CallGraph* cg, const QVariant&) {
                             m_api->nodeInfo(nID, cg, "updateInfo", "error");
                         })
                 ->nodes(
                     "updateInfo",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         m_node = data.toMap();
                         m_infoForm->loadInfo(m_node);
                         cg->toFinal();
                     },
                     "error",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         qDebug() << data;
                         cg->toFinal();
                     })
@@ -88,22 +88,72 @@ CMSNodeInfo::setFormEnabled() {
     } else {
         m_infoForm->setEnabled(false);
         m_node.clear();
-    }
+    }*/
+
+    /*if (hasSelection) {
+        QVariantMap node = m_cmsBrowser->currentNode();
+        int nID = node["id"].toInt();
+        if (nID > 0) {
+            m_node = node;
+            m_infoForm->loadInfo(m_node);
+            m_infoForm->setEnabled(true);
+        } else {
+            m_infoForm->setEnabled(false);
+            m_node.clear();
+        }
+    } else {
+        m_infoForm->setEnabled(false);
+        m_node.clear();
+    }*/
+    CallGraph::start("selection", this)
+        ->nodes("selection",
+                [=](CallGraph* cg, const QVariant&) {
+                    if (hasSelection)
+                        cg->to("loadNodeInfo", m_cmsBrowser->currentNode());
+                    else
+                        cg->to("getListNodeInfo");
+                })
+        ->nodes("getListNodeInfo",
+                [=](CallGraph* cg, const QVariant&) {
+                    m_api->nodeInfo(m_cmsBrowser->listNode(), cg,
+                                    "loadNodeInfo", "error");
+                })
+        ->nodes("loadNodeInfo",
+                [=](CallGraph* cg, const QVariant& data) {
+                    m_node = data.toMap();
+                    if (m_node["id"].toInt() > 0) {
+                        m_infoForm->loadInfo(m_node);
+                        m_infoForm->setEnabled(true);
+                    } else {
+                        m_infoForm->setEnabled(false);
+                        m_infoForm->loadInfo({ { "title", "/" } });
+                        m_node.clear();
+                    }
+
+                    cg->toFinal();
+                })
+        ->nodes("error",
+                [=](CallGraph* cg, const QVariant&) {
+                    m_infoForm->setEnabled(false);
+                    m_node.clear();
+                    cg->toFinal();
+                })
+        ->exec();
 }
 
 void
 CMSNodeInfo::updateSummary(const QString& summary) {
     CallGraph::start("updateSummary", this)
         ->nodes("updateSummary",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_api->updateNode(m_node["id"], { { "summary", summary } },
                                       cg, "end", "error");
                 })
         ->nodes(
             "end",
-            [=](QPointer<CallGraph> cg, const QVariant&) { cg->toFinal(); },
+            [=](CallGraph* cg, const QVariant&) { cg->toFinal(); },
             "error",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 qDebug() << data;
                 cg->toFinal();
             })
@@ -114,15 +164,15 @@ void
 CMSNodeInfo::updateExtData(const QString& extData) {
     CallGraph::start("updateExtData", this)
         ->nodes("updateExtData",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_api->updateNode(m_node["id"], { { "extData", extData } },
                                       cg, "end", "error");
                 })
         ->nodes(
             "end",
-            [=](QPointer<CallGraph> cg, const QVariant&) { cg->toFinal(); },
+            [=](CallGraph* cg, const QVariant&) { cg->toFinal(); },
             "error",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 qDebug() << data;
                 cg->toFinal();
             })

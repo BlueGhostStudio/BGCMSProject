@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(RPCLog LANGUAGES CXX)
+project(BookMark LANGUAGES CXX)
 
 include(GNUInstallDirs)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR})
@@ -25,23 +25,31 @@ find_package(
 
 include_directories(../../CallGraph ../../BGMRPCClient)
 
-add_library(RPCLog SHARED RPCLog_global.h rpclog.h rpclog.cpp)
 
-target_link_libraries(
-  RPCLog
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::WebSockets
-          Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Widgets CallGraph
-          BGMRPCClient)
+add_library(BookMark SHARED
+  BookMark_global.h
+  bookmark.cpp
+  bookmark.h
+  bookmarksortmodel.h bookmarksortmodel.cpp
+  ../../BGCMS/cmsapi.h
+  ../../BGCMS/cmsapi.cpp
+)
 
-target_compile_definitions(RPCLog PRIVATE RPCLog_LIBRARY)
+target_link_libraries(BookMark
+    PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::WebSockets
+            Qt${QT_VERSION_MAJOR}::Gui Qt${QT_VERSION_MAJOR}::Widgets CallGraph
+            BGMRPCClient)
+
+target_compile_definitions(BookMark PRIVATE BOOKMARK_LIBRARY)
+
 
 set_target_properties(
-  RPCLog
-  PROPERTIES OUTPUT_NAME RPCLog
+  BookMark
+  PROPERTIES OUTPUT_NAME BookMark
              INSTALL_RPATH_USE_LINK_PATH ON
              INSTALL_RPATH ${CMSRPATH})
 
 include(../../BGCMS.cmake)
 
-install(TARGETS RPCLog
+install(TARGETS BookMark
         LIBRARY DESTINATION ${DATALOCATION}/plugins)

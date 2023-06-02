@@ -1,7 +1,7 @@
 /*****************************************************************************
- * RPCLog_global.h
+ * bookmarksortmodel.cpp
  *
- * Created: 2022/2/8 2022 by blueghost
+ * Created: 2022/4/24 2022 by blueghost
  *
  * Copyright 2022 blueghost. All rights reserved.
  *
@@ -15,15 +15,18 @@
  * contact the author of this file, or the owner of the project in which
  * this file belongs to.
  *****************************************************************************/
-#ifndef RPCLOG_GLOBAL_H
-#define RPCLOG_GLOBAL_H
+#include "bookmarksortmodel.h"
 
-#include <QtCore/qglobal.h>
+BookMarkSortModel::BookMarkSortModel(QObject* parent)
+    : QSortFilterProxyModel{ parent } {}
 
-#if defined(RPCLOG_LIBRARY)
-#define RPCLOG_EXPORT Q_DECL_EXPORT
-#else
-#define RPCLOG_EXPORT Q_DECL_IMPORT
-#endif
+bool
+BookMarkSortModel::lessThan(const QModelIndex& source_left,
+                            const QModelIndex& source_right) const {
+    QString lPath = source_left.data(Qt::UserRole + 2).toString();
+    QString rPath = source_right.data(Qt::UserRole + 2).toString();
 
-#endif  // RPCLOG_GLOBAL_H
+    qDebug() << lPath << rPath;
+
+    return QString::compare(lPath, rPath) < 0;
+}

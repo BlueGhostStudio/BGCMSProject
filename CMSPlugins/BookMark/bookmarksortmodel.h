@@ -1,7 +1,7 @@
 /*****************************************************************************
- * rpclog.h
+ * bookmarksortmodel.h
  *
- * Created: 2022/2/8 2022 by blueghost
+ * Created: 2022/4/24 2022 by blueghost
  *
  * Copyright 2022 blueghost. All rights reserved.
  *
@@ -15,32 +15,19 @@
  * contact the author of this file, or the owner of the project in which
  * this file belongs to.
  *****************************************************************************/
-#ifndef RPCLOG_H
-#define RPCLOG_H
+#ifndef BOOKMARKSORTMODEL_H
+#define BOOKMARKSORTMODEL_H
 
-#include <QTextBrowser>
+#include <QSortFilterProxyModel>
 
-#include "../cmsplugininterface.h"
-#include "RPCLog_global.h"
-
-class RPCLOG_EXPORT RPCLog : public QObject, public CMSPluginInterface {
+class BookMarkSortModel : public QSortFilterProxyModel {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.bgstudio.BGCMS.CMSPluginInterface" FILE
-                          "RPCLog.json")
-    Q_INTERFACES(CMSPluginInterface)
-
 public:
-    RPCLog(QObject* parent = nullptr);
+    explicit BookMarkSortModel(QObject* parent = nullptr);
 
-    pluginUI initial(CMSApi* api, CMSBrowserBase* browser,
-                     const pluginUI& ui) override;
-
-private slots:
-    void browserMessage(const QString& message);
-
-private:
-    QVariantMap m_callHistory;
-    QTextBrowser* m_logBrowser;
+protected:
+    bool lessThan(const QModelIndex& source_left,
+                  const QModelIndex& source_right) const;
 };
 
-#endif  // RPCLOG_H
+#endif  // BOOKMARKSORTMODEL_H

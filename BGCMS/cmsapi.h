@@ -33,32 +33,35 @@ public:
     void setGrp(const QString& grp);
     QString CMSObjID(const QString& obj);
 
-    void join(QPointer<CallGraph> pcg, const QString& to);
-    void login(const QString& token, QPointer<CallGraph> pcg, const QString& to,
+    void join(CallGraph* pcg, const QString& to);
+    void login(const QString& token, CallGraph* pcg, const QString& to,
                const QString& error);
     void addNode(const QVariant& pNode, const QVariantMap& nodeData,
-                 QPointer<CallGraph> pcg, const QString& to,
-                 const QString& error);
-    void removeNode(const QVariant& node, QPointer<CallGraph> pcg,
-                    const QString& to, const QString& error);
-    void node(const QVariant& node, QPointer<CallGraph> pcg, const QString& to,
-              const QString& error);
-    void nodeInfo(const QVariant& node, QPointer<CallGraph> pcg,
-                  const QString& to, const QString& error);
-    void nodePath(const QVariant& node, QPointer<CallGraph> pcg,
-                  const QString& to);
-    void loadNodes(const QVariant& pNode, QPointer<CallGraph> pcg,
-                   const QString& to, const QString& error);
-    void updateNode(const QVariant& node, const QVariantMap& newData,
-                    QPointer<CallGraph> pcg, const QString& to,
+                 CallGraph* pcg, const QString& to, const QString& error);
+    void removeNode(const QVariant& node, CallGraph* pcg, const QString& to,
                     const QString& error);
+    void refNode(const QVariant& node, CallGraph* pcg, const QString& to,
+                 const QString& error);
+    void refNodeInfo(const QVariant& node, CallGraph* pcg, const QString& to,
+                     const QString& error);
+    void node(const QVariant& node, CallGraph* pcg, const QString& to,
+              const QString& error);
+    void nodeInfo(const QVariant& node, CallGraph* pcg, const QString& to,
+                  const QString& error);
+    void nodePath(const QVariant& node, CallGraph* pcg, const QString& to);
+    void loadNodes(const QVariant& pNode, CallGraph* pcg, const QString& to,
+                   const QString& error);
+    void updateNode(const QVariant& node, const QVariantMap& newData,
+                    CallGraph* pcg, const QString& to, const QString& error);
     void moveNode(const QVariant& source, const QVariant& target,
-                  QPointer<CallGraph> pcg, const QString& to,
-                  const QString& error);
+                  CallGraph* pcg, const QString& to, const QString& error);
     void copyNode(const QVariant& source, const QVariant& target,
-                  QPointer<CallGraph> pcg, const QString& to,
-                  const QString& error);
+                  CallGraph* pcg, const QString& to, const QString& error);
+    void copyRefNode(const QVariant& source, const QVariant& target,
+                     CallGraph* pcg, const QString& to, const QString& error);
+
 signals:
+    void logined();
     void nodeCreated(const QVariantMap& newNode);
     void nodeRenamed(const QVariant& node, const QString& name);
     void nodeRemoved(const QVariant& node);
@@ -67,6 +70,15 @@ signals:
     void nodeUpdated(int id, const QVariantMap& node);
     void nodeCopied(const QVariantMap& node);
     void nodeMoved(const QVariantMap& node, const QVariant& targetNode);
+
+private:
+    void _node(const QString& method, const QVariant& node, CallGraph* pcg,
+               const QString& to, const QString& error);
+    void _refNodeInfo(const QString& method, const QVariant& node,
+                      CallGraph* pcg, const QString& to, const QString& error);
+    void _copyNode(const QString& method, const QVariant& source,
+                   const QVariant& target, CallGraph* pcg, const QString& to,
+                   const QString& error);
 
 private:
     QString m_grp;

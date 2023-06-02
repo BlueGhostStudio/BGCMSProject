@@ -22,8 +22,9 @@
 #include <QDebug>
 #include <QHeaderView>
 #include <QMessageBox>
+#include <QRegularExpression>
 
-//#include "newnodedialog.h"
+// #include "newnodedialog.h"
 
 CMSBrowser::CMSBrowser(QWidget* parent) : CMSBrowserBase(parent) {}
 
@@ -137,11 +138,11 @@ CMSBrowser::hasSelection() const {
 }
 
 void
-CMSBrowser::load(const QVariant& pNode, QPointer<CallGraph> pcg,
-                 const QString& to, const QString& err) {
+CMSBrowser::load(const QVariant& pNode, CallGraph* pcg, const QString& to,
+                 const QString& err) {
     CallGraph::start("loadListData", this)
         ->nodes("loadListData",
-                [=](QPointer<CallGraph> cg, const QVariant& /* data*/) {
+                [=](CallGraph* cg, const QVariant& /* data*/) {
                     // setEnabled(false);
                     emit working(true);
                     // loadNodes(m_cmsClient, data, cg, "loaded", "loaderr");
@@ -149,7 +150,7 @@ CMSBrowser::load(const QVariant& pNode, QPointer<CallGraph> pcg,
                 })
         ->nodes(
             "loaded",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 QVariantMap m = data.toMap();
                 if (!m["id"].isNull())
                     m_listNode = qAbs(m["id"].toInt());
@@ -170,20 +171,20 @@ CMSBrowser::load(const QVariant& pNode, QPointer<CallGraph> pcg,
                 // m_cmsSortFilterModel.sort(0);
                 m_cmsSortFilterModel.invalidate();
 
-                if (!pcg.isNull() && !to.isEmpty()) pcg->to(to);
+                if (pcg /*.isNull()*/ && !to.isEmpty()) pcg->to(to);
 
                 cg->to("end");
             },
             "loaderr",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
-                if (!pcg.isNull() && !err.isEmpty()) pcg->to(err, data);
+            [=](CallGraph* cg, const QVariant& data) {
+                if (pcg /*.isNull()*/ && !err.isEmpty()) pcg->to(err, data);
 
                 emit logMessage(tr("ERROR: ") + data.toString());
 
                 cg->to("end");
             })
         ->nodes("end",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     // setEnabled(true);
                     emit working(false);
                     emit atRoot(m_listNode.isNull());
@@ -228,18 +229,18 @@ CMSBrowser::removeSelectedNodes() {
             QVariant id = rmNodeIDs.takeFirst();
             CallGraph::start("removeNode", this)
                 ->nodes("removeNode",
-                        [=](QPointer<CallGraph> cg, const QVariant&) {
+                        [=](CallGraph* cg, const QVariant&) {
                             // setEnabled(false);
                             emit working(true);
                             m_api->removeNode(id, cg, "end", "error");
                         })
                 ->nodes("error",
-                        [=](QPointer<CallGraph> cg, const QVariant& data) {
+                        [=](CallGraph* cg, const QVariant& data) {
                             emit logMessage(tr("ERROR: ") + data.toString());
                             cg->to("end");
                         })
                 ->nodes("end",
-                        [=](QPointer<CallGraph> cg, const QVariant&) {
+                        [=](CallGraph* cg, const QVariant&) {
                             // setEnabled(true);
                             emit working(false);
                             cg->toFinal();
@@ -253,21 +254,20 @@ void
 CMSBrowser::back() {
     CallGraph::start("getNode", this)
         ->nodes("getNode",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_api->node(m_listNode, cg, "back", "error");
                 })
         ->nodes(
             "back",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 load(data.toMap()["pid"], cg, "end", "error");
             },
             "error",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 emit logMessage(tr("ERROR: ") + data.toString());
                 cg->to("end");
             })
-        ->nodes("end",
-                [=](QPointer<CallGraph> cg, const QVariant&) { cg->toFinal(); })
+        ->nodes("end", [=](CallGraph* cg, const QVariant&) { cg->toFinal(); })
         ->exec();
 }
 
@@ -278,10 +278,119 @@ CMSBrowser::rootDirectory() {
 
 void
 CMSBrowser::copySelectedNodes() {
-    QMimeData* mimeData = new QMimeData;
+    /*QMimeData* mimeData = new QMimeData;
 
     mimeData->setData(__MIME_COPY__, selectedNodesMimeData());
     QApplication::clipboard()->setMimeData(mimeData);
+
+    copyNodeTextMimeData(mimeData);*/
+    int format = QSettings().value("copyLinkFormat", 0).toInt();
+
+    CallGraph::start("getSelectedNodes", this)
+        ->nodes("getSelectedNodes",
+                [=](CallGraph* cg, const QVariant&) {
+                    cg->setProperty("nodes", selectedNodesMimeData());
+                    cg->to("getCurrentNode");
+                })
+        ->nodes("getCurrentNode",
+                [=](CallGraph* cg, const QVariant&) {
+                    cg->setProperty("curNode", currentNode());
+                    if (format == 0 || format == 3)
+                        cg->to("copyToClipboard");
+                    else
+                        cg->to("checkImg");
+                })
+        ->nodes("checkImg",
+                [=](CallGraph* cg, const QVariant&) {
+                    QVariantMap mData = cg->property("curNode").toMap();
+                    bool isImage =
+                        QSettings()
+                            .value("contentType/image")
+                            .toList()
+                            .contains(mData["contentType"].toString());
+                    cg->setProperty("isImage", isImage);
+                    if (!isImage)
+                        cg->to("copyToClipboard");
+                    else
+                        cg->to("getImgContent", mData);
+                })
+        ->nodes("getImgContent",
+                [=](CallGraph* cg, const QVariant& node) {
+                    m_api->node(node.toMap()["id"], cg, "getImgUrl",
+                                "copyToClipboard");
+                })
+        ->nodes("getImgUrl",
+                [=](CallGraph* cg, const QVariant& node) {
+                    QString content = node.toMap()["content"].toString();
+                    if (content.contains(QRegularExpression("^link:"))) {
+                        cg->setProperty("imgUrl", content.mid(5));
+                        cg->to("copyToClipboard");
+                    } else if (content.contains(QRegularExpression("^res:"))) {
+                        m_api
+                            ->callMethod(m_api->CMSObjID("media"), "mediaURL",
+                                         { content.mid(4) })
+                            ->then([=](const QVariant& ret) {
+                                cg->setProperty("imgUrl", ret.toList()[0]);
+                                cg->to("copyToClipboard");
+                            });
+                    } else
+                        cg->to("copyToClipboard");
+                })
+        ->nodes(
+            "copyToClipboard",
+            [=](CallGraph* cg, const QVariant&) {
+                QMimeData* mimeData = new QMimeData;
+                mimeData->setData(__MIME_COPY__,
+                                  cg->property("nodes").toByteArray());
+                QVariantMap mData = cg->property("curNode").toMap();
+                bool isImage = cg->property("isImage").toBool();
+                QString imgUrl = cg->property("imgUrl").toString();
+                QString summary = mData["summary"].toString();
+                QString title = mData["title"].toString();
+                QString id = mData["id"].toString();
+
+                QString textData;
+                switch (format) {
+                case 0:
+                    textData = "?id=" + id;
+                    break;
+                case 1: {
+                    QString aContent = title;
+                    if (isImage)
+                        aContent =
+                            QString(
+                                R"(<img src="%1" alt="%2" title="%3"></img>)")
+                                .arg(imgUrl)
+                                .arg(summary)
+                                .arg(title);
+                    textData = QString(R"(<a href="?id=%1" title="%2">%3</a>)")
+                                   .arg(id)
+                                   .arg(summary)
+                                   .arg(aContent);
+                } break;
+                case 2: {
+                    QString lContent = mData["title"].toString();
+                    if (isImage)
+                        lContent = QString(R"md(![%1](%2 %3))md")
+                                       .arg(summary)
+                                       .arg(imgUrl)
+                                       .arg(title);
+                    textData = QString(R"md([%1](?id=%2 %3))md")
+                                   .arg(lContent)
+                                   .arg(id)
+                                   .arg(summary);
+                } break;
+                case 3:
+                    textData = id;
+                    break;
+                default:
+                    break;
+                }
+                mimeData->setText(textData);
+                QGuiApplication::clipboard()->setMimeData(mimeData);
+                cg->toFinal();
+            })
+        ->exec();
 }
 
 void
@@ -303,7 +412,7 @@ CMSBrowser::paste() {
             if (nNode > 0) {
                 CallGraph::start("copyNode", this)
                     ->nodes("copyNode",
-                            [=](QPointer<CallGraph> cg, const QVariant& data) {
+                            [=](CallGraph* cg, const QVariant& data) {
                                 // setEnabled(false);
                                 emit working(true);
                                 m_api->copyNode(nNode, m_listNode, cg, "end",
@@ -311,12 +420,12 @@ CMSBrowser::paste() {
                             })
                     ->nodes(
                         "error",
-                        [=](QPointer<CallGraph> cg, const QVariant& data) {
+                        [=](CallGraph* cg, const QVariant& data) {
                             emit logMessage(tr("ERROR: ") + data.toString());
                             cg->to("end");
                         })
                     ->nodes("end",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 // setEnabled(true);
                                 emit working(false);
                                 cg->toFinal();
@@ -331,19 +440,19 @@ CMSBrowser::paste() {
             if (nNode > 0) {
                 CallGraph::start("moveNode", this)
                     ->nodes("moveNode",
-                            [=](QPointer<CallGraph> cg, const QVariant& data) {
+                            [=](CallGraph* cg, const QVariant& data) {
                                 emit working(true);
                                 m_api->moveNode(nNode, m_listNode, cg, "end",
                                                 "error");
                             })
                     ->nodes(
                         "error",
-                        [=](QPointer<CallGraph> cg, const QVariant& data) {
+                        [=](CallGraph* cg, const QVariant& data) {
                             emit logMessage(tr("ERROR: ") + data.toString());
                             cg->to("end");
                         })
                     ->nodes("end",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 // setEnabled(true);
                                 emit working(false);
                                 cg->toFinal();
@@ -355,6 +464,39 @@ CMSBrowser::paste() {
         clipboard->clear();
     } else if (mimeData->hasFormat(__MIME_PLUGIN__))
         emit pasteContent();
+}
+
+void
+CMSBrowser::pasteRef() {
+    QClipboard* clipboard = QGuiApplication::clipboard();
+    const QMimeData* mimeData = clipboard->mimeData();
+    if (mimeData->hasFormat(__MIME_COPY__)) {
+        QByteArrayList baNodeList = mimeData->data(__MIME_COPY__).split(',');
+        foreach (const QByteArray& baNode, baNodeList) {
+            int nNode = baNode.toInt();
+            if (nNode > 0) {
+                CallGraph::start("copyRefNode", this)
+                    ->nodes("copyRefNode",
+                            [=](CallGraph* cg, const QVariant&) {
+                                emit working(true);
+                                m_api->copyRefNode(nNode, m_listNode, cg, "end",
+                                                   "error");
+                            })
+                    ->nodes(
+                        "error",
+                        [=](CallGraph* cg, const QVariant& data) {
+                            emit logMessage(tr("ERROR: ") + data.toString());
+                            cg->to("end");
+                        })
+                    ->nodes("end",
+                            [=](CallGraph* cg, const QVariant&) {
+                                emit working(false);
+                                cg->toFinal();
+                            })
+                    ->exec();
+            }
+        }
+    }
 }
 
 QVariantMap
@@ -396,6 +538,7 @@ CMSBrowser::updateNodeListItem(int row, const QVariantMap& data) {
     QString nType = data["type"].toString();
     bool isDir = data["type"] == "D";
     int nID = data["id"].toInt();
+    QString extData = data["extData"].toString();
 
     QStandardItem* nameItem = nodeItem(0);
     nameItem->setData(QVariant());
@@ -410,7 +553,12 @@ CMSBrowser::updateNodeListItem(int row, const QVariantMap& data) {
             QMimeDatabase db;
             QString mimeType =
                 db.mimeTypeForFile("check." + contentType).name();
-            if (mimeType.contains(QRegularExpression("^image")))
+            if (nType == "R" && contentType == "ref") {
+                if (extData == "D")
+                    nameItem->setIcon(QIcon(":/imgs/refDir.png"));
+                else
+                    nameItem->setIcon(QIcon(":/imgs/refFile.png"));
+            } else if (mimeType.contains(QRegularExpression("^image")))
                 nameItem->setIcon(QIcon(":/imgs/image.png"));
             else if (mimeType.contains(QRegularExpression("^video")))
                 nameItem->setIcon(QIcon(":/imgs/video.png"));
@@ -478,11 +626,11 @@ void
 CMSBrowser::updatePathChanged(const QVariant& node) {
     CallGraph::start("nodePath", this)
         ->nodes("nodePath",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_api->nodePath(m_listNode, cg, "pathChanged");
                 })
         ->nodes("pathChanged",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     QVariantMap path = data.toMap();
                     qDebug() << path["str"];
                     emit pathChanged(path["str"].toString());
@@ -494,26 +642,73 @@ CMSBrowser::updatePathChanged(const QVariant& node) {
 
 void
 CMSBrowser::onNodeItemDoubleClicked(const QModelIndex& index) {
-    QVariantMap _nodeData = nodeData(m_cmsSortFilterModel.mapToSource(index));
+    // QVariantMap _nodeData =
+    // nodeData(m_cmsSortFilterModel.mapToSource(index));
 
-    if (_nodeData["type"] == "D") {
+    CallGraph::start("checkNodeType", this)
+        ->nodes("checkNodeType",
+                [=](CallGraph* cg, const QVariant& data) {
+                    QVariantMap mData = data.toMap();
+                    if (mData["type"] == "D") {
+                        cg->to("changeDir", data);
+                        emit nodeItemDoubleClicked(mData);
+                    } else if (mData["type"] == "R" &&
+                               mData["contentType"] == "ref")
+                        cg->to("getRef", data);
+                    else {
+                        emit nodeItemDoubleClicked(mData);
+                        cg->to("end");
+                    }
+                })
+        ->nodes("changeDir",
+                [=](CallGraph* cg, const QVariant& data) {
+                    load(data.toMap()["id"], cg, "end", "error");
+                })
+        ->nodes("getRef",
+                [=](CallGraph* cg, const QVariant& data) {
+                    m_api->refNode(data.toMap()["id"], cg, "checkNodeType",
+                                   "error");
+                })
+        ->nodes("error",
+                [=](CallGraph* cg, const QVariant& data) {
+                    emit logMessage(tr("ERROR: ") + data.toString());
+                    cg->to("end");
+                })
+        ->nodes("end", [=](CallGraph* cg, const QVariant&) { cg->toFinal(); })
+        ->exec(nodeData(m_cmsSortFilterModel.mapToSource(index)));
+
+    /*if (_nodeData["type"] == "D") {
         CallGraph::start("load", this)
             ->nodes("load",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         // qDebug() << _nodeData["id"];
                         load(_nodeData["id"], cg, "end", "loadErr");
                     })
-            ->nodes("end", [=](QPointer<CallGraph> cg,
-                               const QVariant&) { cg->toFinal(); })
+            ->nodes("end",
+                    [=](CallGraph* cg, const QVariant&) { cg->toFinal(); })
             ->nodes("loadErr",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         emit logMessage(tr("ERROR: ") + data.toString());
                         cg->toFinal();
                     })
             ->exec();
-    }
-
-    emit nodeItemDoubleClicked(_nodeData);
+    } else if (_nodeData["type"] == "R" && _nodeData["contentType"] == "ref") {
+        CallGraph::start("getRefNode", this)
+            ->nodes("getRefNode",
+                    [=](QPointer<CallGraph> cg, const QVariant&) {
+                        m_api->refNodeInfo(_nodeData["id"], cg, "emitSignal",
+                                           "end");
+                    })
+            ->nodes("emitSignal",
+                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                        emit nodeItemDoubleClicked(data.toMap());
+                        cg->to("end");
+                    })
+            ->nodes("end", [=](QPointer<CallGraph> cg,
+                               const QVariant&) { cg->toFinal(); })
+            ->exec();
+    } else
+        emit nodeItemDoubleClicked(_nodeData);*/
 }
 
 void
@@ -560,20 +755,20 @@ CMSBrowser::onNodeItemChanged(QStandardItem* item) {
         if (!updateData.isEmpty()) {
             CallGraph::start("updateNode", this)
                 ->nodes("updateNode",
-                        [=](QPointer<CallGraph> cg, const QVariant&) {
+                        [=](CallGraph* cg, const QVariant&) {
                             // setEnabled(false);
                             emit working(true);
                             m_api->updateNode(nID, updateData, cg, "end",
                                               "error");
                         })
                 ->nodes("error",
-                        [=](QPointer<CallGraph> cg, const QVariant& data) {
+                        [=](CallGraph* cg, const QVariant& data) {
                             emit logMessage(tr("ERROR: ") + data.toString());
                             updateNodeListItem(row, origNodeData);
                             cg->to("end");
                         })
                 ->nodes("end",
-                        [=](QPointer<CallGraph> cg, const QVariant&) {
+                        [=](CallGraph* cg, const QVariant&) {
                             // setEnabled(true);
                             emit working(false);
                             cg->toFinal();
@@ -597,6 +792,25 @@ CMSBrowser::selectedNodesMimeData() {
     }
 
     return nodes;
+}
+
+void
+CMSBrowser::copyNodeTextMimeData(QMimeData* mimeData) {
+    CallGraph::start("getNodeInfo", this)
+        ->nodes("getNodeInfo",
+                [=](CallGraph* cg, const QVariant&) {
+                    QVariant node = currentNode();
+                    cg->setProperty("node", node);
+                    cg->to("copyHref", node);
+                })
+        ->nodes("getUrl",
+                [=](CallGraph* cg, const QVariant& data) {
+                    QVariantMap mData = data.toMap();
+                    mimeData->setText("this is a test");
+                    QGuiApplication::clipboard()->setMimeData(mimeData);
+                    cg->toFinal();
+                })
+        ->exec();
 }
 
 bool

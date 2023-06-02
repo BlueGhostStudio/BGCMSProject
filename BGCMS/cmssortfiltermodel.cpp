@@ -38,6 +38,12 @@ CMSSortFilterModel::lessThan(const QModelIndex& source_left,
 
     QString lType = leftNode["type"].toString();
     QString rType = rightNode["type"].toString();
+    bool lDir = lType == 'D' ||
+                (lType == 'R' && leftNode["contentType"].toString() == "ref" &&
+                 leftNode["extData"].toString() == 'D');
+    bool rDir = rType == 'D' ||
+                (rType == 'R' && rightNode["contentType"].toString() == "ref" &&
+                 rightNode["extData"].toString() == 'D');
 
     int lSeq = leftNode["seq"].toInt();
     int rSeq = rightNode["seq"].toInt();
@@ -45,8 +51,8 @@ CMSSortFilterModel::lessThan(const QModelIndex& source_left,
     int lSeqType = lSeq == -2 ? 0 : (lSeq >= 0 ? 1 : 2);
     int rSeqType = rSeq == -2 ? 0 : (rSeq >= 0 ? 1 : 2);
 
-    if (lType != rType)
-        return lType == 'D';
+    if (lDir != rDir)
+        return lDir;
     else if (lSeqType != rSeqType)
         return lSeqType < rSeqType;
     else

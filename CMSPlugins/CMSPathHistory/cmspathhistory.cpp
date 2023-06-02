@@ -17,47 +17,47 @@
  *****************************************************************************/
 #include "cmspathhistory.h"
 
-CMSPathHistory::CMSPathHistory(QObject* parent) : QObject(parent) {}
+CMSPathHistory::CMSPathHistory(QObject *parent) : QObject(parent) {}
 
-pluginUI
-CMSPathHistory::initial(CMSApi* api, CMSBrowserBase* browser,
-                        const pluginUI& ui) {
-    CMSPluginInterface::initial(api, browser);
-    pluginUI _pluginUI;
+pluginUI CMSPathHistory::initial(CMSApi *api, CMSBrowserBase *browser,
+                                 const pluginUI &ui) {
+  CMSPluginInterface::initial(api, browser);
+  pluginUI _pluginUI;
 
-    m_historyList = new QListWidget;
-    m_historyList->setWindowTitle(tr("History"));
-    m_historyList->setObjectName("CMSPathHistory");
-    m_historyList->setProperty("dockWidgetArea", Qt::LeftDockWidgetArea);
+  m_historyList = new QListWidget;
+  m_historyList->setWindowTitle(tr("History"));
+  m_historyList->setObjectName("CMSPathHistory");
+  m_historyList->setProperty("dockWidgetArea", Qt::LeftDockWidgetArea);
+  m_historyList->setSortingEnabled(true);
 
-    QPalette palette;
-    palette.setBrush(QPalette::Base, QColor(0, 0, 0, 0));
-    m_historyList->setPalette(palette);
-    m_historyList->setAutoFillBackground(true);
-    m_historyList->setFrameShape(QFrame::NoFrame);
+  QPalette palette;
+  palette.setBrush(QPalette::Base, QColor(0, 0, 0, 0));
+  m_historyList->setPalette(palette);
+  m_historyList->setAutoFillBackground(true);
+  m_historyList->setFrameShape(QFrame::NoFrame);
 
-    QObject::connect(m_cmsBrowser, SIGNAL(pathChanged(QString)), this,
-                     SLOT(addPath(QString)));
-    QObject::connect(m_historyList, &QListWidget::itemClicked, this,
-                     [=](QListWidgetItem* item) {
-                         QString path = item->text();
-                         if (path != m_currentPath) m_cmsBrowser->load(path);
-                     });
+  QObject::connect(m_cmsBrowser, SIGNAL(pathChanged(QString)), this,
+                   SLOT(addPath(QString)));
+  QObject::connect(m_historyList, &QListWidget::itemClicked, this,
+                   [=](QListWidgetItem *item) {
+                     QString path = item->text();
+                     if (path != m_currentPath)
+                       m_cmsBrowser->load(path);
+                   });
 
-    _pluginUI.docker = m_historyList;
+  _pluginUI.docker = m_historyList;
 
-    return _pluginUI;
+  return _pluginUI;
 }
 
-void
-CMSPathHistory::addPath(const QString& path) {
-    m_currentPath = path;
-    QList<QListWidgetItem*> exist =
-        m_historyList->findItems(path, Qt::MatchExactly);
-    if (exist.count() > 0)
-        exist[0]->setSelected(true);
-    else {
-        QListWidgetItem* newPath = new QListWidgetItem(path, m_historyList);
-        newPath->setSelected(true);
-    }
+void CMSPathHistory::addPath(const QString &path) {
+  m_currentPath = path;
+  QList<QListWidgetItem *> exist =
+      m_historyList->findItems(path, Qt::MatchExactly);
+  if (exist.count() > 0)
+    exist[0]->setSelected(true);
+  else {
+    QListWidgetItem *newPath = new QListWidgetItem(path, m_historyList);
+    newPath->setSelected(true);
+  }
 }

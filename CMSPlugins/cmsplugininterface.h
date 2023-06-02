@@ -24,7 +24,7 @@
 
 #include "../BGCMS/cmsapi.h"
 #include "../BGCMS/cmsbrowserbase.h"
-//#include "../BGCMS/cmsbrowser.h"
+// #include "../BGCMS/cmsbrowser.h"
 
 struct pluginUI {
     QWidget* docker = nullptr;
@@ -32,6 +32,7 @@ struct pluginUI {
     QMenu* newNodeMenu;
     QMenu* pluginsMenu;
     QToolBar* pluginsToolbar;
+    QMainWindow* mainWindow;
 };
 
 class CMSPluginInterface {

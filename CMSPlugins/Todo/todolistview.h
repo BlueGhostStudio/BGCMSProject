@@ -1,7 +1,7 @@
 /*****************************************************************************
- * filterform.h
+ * todolistview.h
  *
- * Created: 2022/2/21 2022 by blueghost
+ * Created: 2022/4/15 2022 by blueghost
  *
  * Copyright 2022 blueghost. All rights reserved.
  *
@@ -15,28 +15,39 @@
  * contact the author of this file, or the owner of the project in which
  * this file belongs to.
  *****************************************************************************/
-#ifndef FILTERFORM_H
-#define FILTERFORM_H
+#ifndef TODOLISTVIEW_H
+#define TODOLISTVIEW_H
 
-#include <QSettings>
+#include <QStandardItemModel>
 
-#include "ui_filterform.h"
+#include "todoapi.h"
+#include "todosortmodel.h"
+#include "ui_todolistview.h"
 
-class FilterForm : public QWidget, private Ui::FilterForm {
+class TodoListView : public QWidget, private Ui::TodoListView {
     Q_OBJECT
 
 public:
-    explicit FilterForm(QWidget* parent = nullptr);
+    explicit TodoListView(TodoApi* api, QWidget* parent = nullptr);
 
-    bool check(const QVariantMap& node) const;
-    void updateContentTypeList();
-
-signals:
-    void updateFilter();
+    void load(const QVariant& node);
 
 private slots:
-    void checkAll();
-    void uncheckAll();
+    void addTodo();
+    void removeAllCompleted();
+
+private:
+    void addTodoItem(const QVariantMap& todo);
+    void formatViewItem(QStandardItem* item,
+                        const QVariantMap& mTodoData) const;
+
+    QStandardItem* findItem(int id);
+
+protected:
+    QStandardItemModel m_todoModel;
+    TodoSortModel m_sortModel;
+    TodoApi* m_api;
+    QString m_lID;
 };
 
-#endif  // FILTERFORM_H
+#endif  // TODOLISTVIEW_H

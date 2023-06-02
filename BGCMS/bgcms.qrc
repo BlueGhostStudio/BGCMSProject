@@ -22,5 +22,8 @@
         <file>imgs/zoomfit.png</file>
         <file>imgs/undo.png</file>
         <file>imgs/redo.png</file>
+        <file>imgs/linking.png</file>
+        <file>imgs/refDir.png</file>
+        <file>imgs/refFile.png</file>
     </qresource>
 </RCC>

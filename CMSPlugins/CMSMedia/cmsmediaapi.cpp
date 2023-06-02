@@ -32,7 +32,7 @@ CMSMediaApi::cmsApi() const {
 }
 
 void
-CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
+CMSMediaApi::getMedia(const QString& content, CallGraph* pcg,
                       const QString& to, const QString& error,
                       const QString& progressBegin, const QString& progress) {
     if (content.contains(QRegularExpression("^res:"))) {
@@ -43,7 +43,7 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
         CallGraph::start("requestGetMedia", this)
             ->nodes(
                 "requestGetMedia",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_cmsApi
                         ->callMethod(m_cmsApi->CMSObjID("media"),
                                      "requestGetMedia", { fileName })
@@ -52,12 +52,12 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
                             QVariant ret0 = retList[0];
                             if (ret0.typeId() == QMetaType::Bool &&
                                 ret0.toBool() == false) {
-                                if (!pcg.isNull() && !error.isEmpty())
+                                if (pcg/*.isNull()*/ && !error.isEmpty())
                                     pcg->to(error, "can't request Get Media");
 
                                 cg->to("end");
                             } else {
-                                if (!pcg.isNull() && !progressBegin.isEmpty())
+                                if (pcg/*.isNull()*/ && !progressBegin.isEmpty())
                                     pcg->to(progressBegin, retList[1]);
                                 cg->to("getMedia",
                                        QVariantList({ ret0, 0, 4096 }));
@@ -65,7 +65,7 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
                         });
                 })
             ->nodes("getMedia",
-                    [=](QPointer<CallGraph> cg, const QVariant& data) {
+                    [=](CallGraph* cg, const QVariant& data) {
                         QVariantList dataList = data.toList();
                         m_cmsApi
                             ->callMethod(m_cmsApi->CMSObjID("media"),
@@ -78,7 +78,7 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
                                     ret0["data"].toByteArray());
                                 int pos = ret0["pos"].toInt();
                                 if (pos == -1) {
-                                    if (!pcg.isNull() && !to.isEmpty()) {
+                                    if (pcg/*.isNull()*/ && !to.isEmpty()) {
                                         if (!progress.isEmpty())
                                             pcg->to(progress,
                                                     mediaData->length());
@@ -88,9 +88,9 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
 
                                     cg->to("end");
                                 } else {
-                                    if (!pcg.isNull() && !progress.isEmpty())
+                                    if (pcg/*.isNull()*/ && !progress.isEmpty())
                                         pcg->to(progress, pos);
-                                    if (!pcg.isNull())
+                                    if (pcg/*.isNull()*/)
                                         cg->to("getMedia",
                                                QVariantList(
                                                    { dataList[0], pos, 4096 }));
@@ -100,34 +100,34 @@ CMSMediaApi::getMedia(const QString& content, QPointer<CallGraph> pcg,
                             });
                     })
             ->nodes("end",
-                    [=](QPointer<CallGraph> cg, const QVariant&) {
+                    [=](CallGraph* cg, const QVariant&) {
                         delete mediaData;
                         cg->toFinal();
                     })
             ->exec();
-    } else if (!pcg.isNull() && !error.isEmpty())
+    } else if (pcg/*.isNull()*/ && !error.isEmpty())
         pcg->to(error, tr("is not resource"));
 }
 
 void
-CMSMediaApi::getImgUrl(const QString& content, QPointer<CallGraph> pcg,
+CMSMediaApi::getImgUrl(const QString& content, CallGraph* pcg,
                        const QString& to, const QString& error) {
     if (content.contains(QRegularExpression("^link:"))) {
-        if (!pcg.isNull() && !to.isEmpty()) pcg->to(to, content.mid(5));
+        if (pcg/*.isNull()*/ && !to.isEmpty()) pcg->to(to, content.mid(5));
     } else if (content.contains(QRegularExpression("^res:"))) {
         m_cmsApi
             ->callMethod(m_cmsApi->CMSObjID("media"), "mediaURL",
                          { content.mid(4) })
             ->then([=](const QVariant& ret) {
-                if (!pcg.isNull() && !to.isEmpty())
+                if (pcg/*.isNull()*/ && !to.isEmpty())
                     pcg->to(to, ret.toList()[0]);
             });
-    } else if (!pcg.isNull() && !error.isEmpty())
+    } else if (pcg/*.isNull()*/ && !error.isEmpty())
         pcg->to(error, tr("Unknow type"));
 }
 
 void
-CMSMediaApi::getImgFromUrl(const QString& content, QPointer<CallGraph> pcg,
+CMSMediaApi::getImgFromUrl(const QString& content, CallGraph* pcg,
                            const QString& to, const QString& error) {
     if (content.contains(QRegularExpression("^link:"))) {
         QNetworkAccessManager* manager = new QNetworkAccessManager;
@@ -136,41 +136,41 @@ CMSMediaApi::getImgFromUrl(const QString& content, QPointer<CallGraph> pcg,
                          [=](QNetworkReply* reply) {
                              qDebug() << "finisied";
                              if (reply->error() == QNetworkReply::NoError) {
-                                 if (!pcg.isNull() && !to.isEmpty())
+                                 if (pcg/*.isNull()*/ && !to.isEmpty())
                                      pcg->to(to, reply->readAll());
-                             } else if (!pcg.isNull() && !error.isEmpty())
+                             } else if (pcg/*.isNull()*/ && !error.isEmpty())
                                  pcg->to(error, tr("get img fail"));
 
                              manager->deleteLater();
                          });
         manager->get(QNetworkRequest(url));
-    } else if (!pcg.isNull() && !error.isEmpty())
+    } else if (pcg/*.isNull()*/ && !error.isEmpty())
         pcg->to(error, tr("is not Url"));
 }
 
 void
 CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
-                       QPointer<CallGraph> pcg, const QString& to,
+                       CallGraph* pcg, const QString& to,
                        const QString& error, const QString& progressBegin,
                        const QString& progress) {
     QString contentType = fileName.section('.', -1).toLower();
     CallGraph::start("readImgData", this)
         ->nodes("readImgData",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     QFile imgFile(fileName);
                     if (imgFile.exists() && imgFile.open(QIODevice::ReadOnly)) {
                         QByteArray imgData = imgFile.readAll();
                         imgFile.close();
                         cg->to("requestPostMedia", imgData);
                     } else {
-                        if (!pcg.isNull() && !error.isEmpty())
+                        if (pcg/*.isNull()*/ && !error.isEmpty())
                             pcg->to(error, tr("file no exist."));
 
                         cg->toFinal();
                     }
                 })
         ->nodes("requestPostMedia",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     m_cmsApi
                         ->callMethod(m_cmsApi->CMSObjID("media"),
                                      "requestPostMedia", { contentType })
@@ -178,7 +178,7 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
                             QVariantList retList = ret.toList();
                             QVariant ret0 = retList[0];
 
-                            if (!pcg.isNull() && !progressBegin.isEmpty())
+                            if (pcg/*.isNull()*/ && !progressBegin.isEmpty())
                                 pcg->to(progressBegin,
                                         data.toByteArray().size());
 
@@ -187,7 +187,7 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
                 })
         ->nodes(
             "postMedia",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 QVariantList list = data.toList();
                 QVariant id = list[0];
                 QByteArray imgData = list[1].toByteArray();
@@ -201,7 +201,7 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
                                      "writeMediaData",
                                      { id, partData.toBase64() })
                         ->then([=](const QVariant&) {
-                            if (!pcg.isNull() && !progress.isEmpty())
+                            if (pcg/*.isNull()*/ && !progress.isEmpty())
                                 pcg->to(progress, postingSize);
 
                             cg->to("postMedia",
@@ -212,7 +212,7 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
                     CallGraph::start("newMediaNode", this)
                         ->nodes(
                             "newMediaNode",
-                            [=](QPointer<CallGraph> NMNCG, const QVariant&) {
+                            [=](CallGraph* NMNCG, const QVariant&) {
                                 QVariantMap newNode;
                                 newNode["name"] = id;
                                 newNode["contentType"] = contentType;
@@ -225,11 +225,11 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
                             })
                         ->nodes(
                             "finished",
-                            [=](QPointer<CallGraph> NMNCG, const QVariant&) {
+                            [=](CallGraph* NMNCG, const QVariant&) {
                                 cg->to("save", id);
                             },
                             "error",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 cg->to("error", id);
                             })
                         ->exec();
@@ -237,23 +237,23 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
             })
         ->nodes(
             "save",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 qDebug() << "---- save ----" << data;
                 m_cmsApi
                     ->callMethod(m_cmsApi->CMSObjID("media"),
                                  "writeMediaDataEnd", { data })
                     ->then([=](const QVariant& ret) {
-                        if (!pcg.isNull() && !to.isEmpty()) pcg->to(to);
+                        if (pcg/*.isNull()*/ && !to.isEmpty()) pcg->to(to);
                         cg->toFinal();
                     });
             },
             "error",
-            [=](QPointer<CallGraph> cg, const QVariant& data) {
+            [=](CallGraph* cg, const QVariant& data) {
                 qDebug() << "------> error ----->" << data;
                 m_cmsApi
                     ->callMethod(m_cmsApi->CMSObjID("media"), "close", { data })
                     ->then([=](const QVariant& ret) {
-                        if (!pcg.isNull() && !error.isEmpty()) pcg->to(error);
+                        if (pcg/*.isNull()*/ && !error.isEmpty()) pcg->to(error);
                         cg->toFinal();
                     });
             })
@@ -261,14 +261,14 @@ CMSMediaApi::postMedia(const QVariant& pNode, const QString& fileName,
 }
 
 void
-CMSMediaApi::removeMedia(const QString& id, QPointer<CallGraph> pcg,
+CMSMediaApi::removeMedia(const QString& id, CallGraph* pcg,
                          const QString& to, const QString& error) {
     m_cmsApi->callMethod(m_cmsApi->CMSObjID("media"), "removeMedia", { id })
         ->then([=](const QVariant& ret) {
             bool ok = ret.toList()[0].toBool();
             if (ok) {
-                if (!pcg.isNull() && !to.isEmpty()) pcg->to(to);
-            } else if (!pcg.isNull() && !error.isEmpty())
+                if (pcg/*.isNull()*/ && !to.isEmpty()) pcg->to(to);
+            } else if (pcg/*.isNull()*/ && !error.isEmpty())
                 pcg->to(error, tr("Can not remove Media"));
         });
 }

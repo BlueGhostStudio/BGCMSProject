@@ -35,7 +35,7 @@ public:
 
     virtual void setFilter(
         std::function<bool(QAbstractItemModel*, int)> callback) = 0;
-    virtual void load(const QVariant& pNode, QPointer<CallGraph> pcg = nullptr,
+    virtual void load(const QVariant& pNode, CallGraph* pcg = nullptr,
                       const QString& to = QString(),
                       const QString& err = QString()) = 0;
     virtual QVariant listNode() = 0;

@@ -1083,6 +1083,45 @@
     </message>
 </context>
 <context>
+    <name>Todo</name>
+    <message>
+        <location filename="../CMSPlugins/Todo/todo.cpp" line="81"/>
+        <source>Todo</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TodoEditForm</name>
+    <message>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="14"/>
+        <source>Todo</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="43"/>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="60"/>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="83"/>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="106"/>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="148"/>
+        <location filename="../CMSPlugins/Todo/todoeditform.ui" line="162"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TodoListView</name>
+    <message>
+        <location filename="../CMSPlugins/Todo/todolistview.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../CMSPlugins/Todo/todolistview.ui" line="35"/>
+        <source>...</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>newNodeDlg</name>
     <message>
         <location filename="../CMSPlugins/CMSContentEditor/newnodedlg.ui" line="14"/>

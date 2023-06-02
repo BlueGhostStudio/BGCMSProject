@@ -20,8 +20,11 @@
   <property name="documentMode">
    <bool>true</bool>
   </property>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
   <property name="dockOptions">
-   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
+   <set>QMainWindow::AllowNestedDocks|QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks|QMainWindow::VerticalTabs</set>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -84,7 +87,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -110,7 +113,17 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <widget class="QMenu" name="menuCopy_Node_link_format">
+     <property name="title">
+      <string>Copy Node link format</string>
+     </property>
+     <addaction name="action_copy_link_href"/>
+     <addaction name="action_copy_link_html"/>
+     <addaction name="action_copy_link_md"/>
+     <addaction name="action_copy_link_id"/>
+    </widget>
     <addaction name="action_remoteObjectGroup"/>
+    <addaction name="menuCopy_Node_link_format"/>
    </widget>
    <widget class="QMenu" name="ui_menu_plugins">
     <property name="title">
@@ -145,6 +158,7 @@
    <addaction name="action_cut"/>
    <addaction name="action_copy"/>
    <addaction name="action_paste"/>
+   <addaction name="action_paste_reference"/>
   </widget>
   <widget class="QToolBar" name="ui_tb_plugins">
    <property name="windowTitle">
@@ -262,6 +276,59 @@
     <string>Instance of CMS</string>
    </property>
   </action>
+  <action name="action_copy_link_html">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Html &lt;a&gt;</string>
+   </property>
+  </action>
+  <action name="action_copy_link_md">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Markdown</string>
+   </property>
+   <property name="autoRepeat">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="action_copy_link_id">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Only node's ID</string>
+   </property>
+   <property name="autoRepeat">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="action_copy_link_href">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Href</string>
+   </property>
+  </action>
+  <action name="action_paste_reference">
+   <property name="icon">
+    <iconset resource="bgcms.qrc">
+     <normaloff>:/imgs/linking.png</normaloff>:/imgs/linking.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste reference</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -277,6 +344,7 @@
     <slot>paste()</slot>
     <slot>cutSelectedNodes()</slot>
     <slot>rootDirectory()</slot>
+    <slot>pasteRef()</slot>
    </slots>
   </customwidget>
  </customwidgets>
@@ -492,6 +560,86 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_copy_link_html</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyLinkFormatChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_copy_link_md</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyLinkFormatChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_copy_link_id</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyLinkFormatChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_copy_link_href</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyLinkFormatChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>action_paste_reference</sender>
+   <signal>triggered()</signal>
+   <receiver>ui_cmsBrowser</receiver>
+   <slot>pasteRef()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>connect2Host()</slot>
@@ -500,5 +648,6 @@
   <slot>newBlankNode()</slot>
   <slot>changeAccount()</slot>
   <slot>setCMSGrp()</slot>
+  <slot>copyLinkFormatChanged()</slot>
  </slots>
 </ui>

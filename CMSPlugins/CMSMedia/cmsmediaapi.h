@@ -30,18 +30,18 @@ public:
 
     void setCMSApi(CMSApi* api);
     CMSApi* cmsApi() const;
-    void getMedia(const QString& content, QPointer<CallGraph> pcg,
+    void getMedia(const QString& content, CallGraph* pcg,
                   const QString& to, const QString& error,
                   const QString& progressBegin, const QString& progress);
-    void getImgUrl(const QString& content, QPointer<CallGraph> pcg,
+    void getImgUrl(const QString& content, CallGraph* pcg,
                    const QString& to, const QString& error);
-    void getImgFromUrl(const QString& content, QPointer<CallGraph> pcg,
+    void getImgFromUrl(const QString& content, CallGraph* pcg,
                        const QString& to, const QString& error);
     void postMedia(const QVariant& pNode, const QString& fileName,
-                   QPointer<CallGraph> pcg, const QString& to,
+                   CallGraph* pcg, const QString& to,
                    const QString& error, const QString& progressBegin,
                    const QString& progress);
-    void removeMedia(const QString& id, QPointer<CallGraph> pcg,
+    void removeMedia(const QString& id, CallGraph* pcg,
                      const QString& to, const QString& error);
 
 signals:

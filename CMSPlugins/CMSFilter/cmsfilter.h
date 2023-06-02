@@ -22,7 +22,10 @@
 
 #include "../cmsplugininterface.h"
 #include "CMSFilter_global.h"
-#include "filterform.h"
+//#include "filterform.h"
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QTreeView>
 
 class CMSFILTER_EXPORT CMSFilter : public QObject, public CMSPluginInterface {
     Q_OBJECT
@@ -36,9 +39,24 @@ public:
     pluginUI initial(CMSApi*, CMSBrowserBase* browser,
                      const pluginUI& ui) override;
 
+signals:
+    void activateFilter();
+
 private:
-    FilterForm* m_filterForm;
+    void initialTreeView();
+    void updateContentTypeList();
+
+private:
+    // FilterForm* m_filterForm;
     QFileSystemWatcher m_settingsWatch;
+    QTreeView* m_filterTreeView;
+    QStandardItemModel m_filterModel;
+
+    QStandardItem m_contentTypeFilter;
+    QStandardItem m_allContentFilter;
+    QStandardItem m_hidenFilter;
+    QStandardItem m_dotdotDirFilter;
+    QStandardItem m_privateFilter;
 };
 
 #endif  // CMSFILTER_H

@@ -43,7 +43,7 @@ private:
     bool isModified() const;
 
 private slots:
-    void save(QPointer<CallGraph> pcg = nullptr, const QString& to = QString(),
+    void save(CallGraph* pcg = nullptr, const QString& to = QString(),
               const QString& error = QString());
     void find();
     void findBackwards();

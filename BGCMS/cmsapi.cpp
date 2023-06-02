@@ -21,6 +21,8 @@
 #include <QDebug>
 
 CMSApi::CMSApi(QObject* parent) : NS_BGMRPCClient::BGMRPCClient(parent) {
+    QSettings settings;
+    setAlive(settings.value("remote/alive", -1).toInt());
     QObject::connect(
         this, &CMSApi::remoteSignal, this,
         [=](const QString& obj, const QString& sig, const QJsonArray& args) {
@@ -69,19 +71,20 @@ CMSApi::CMSObjID(const QString& obj) {
 }
 
 void
-CMSApi::join(QPointer<CallGraph> pcg, const QString& to) {
-    if (!pcg.isNull() && !to.isEmpty())
+CMSApi::join(CallGraph* pcg, const QString& to) {
+    if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod(CMSObjID("main"), "join", {})
             ->then([=](const QVariant& ret) { pcg->to(to, ret.toList()[0]); });
 }
 
 void
-CMSApi::login(const QString& token, QPointer<CallGraph> pcg, const QString& to,
+CMSApi::login(const QString& token, CallGraph* pcg, const QString& to,
               const QString& error) {
-    if (!pcg.isNull() && !to.isEmpty())
+    if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod("account", "login", { token })
             ->then([=](const QVariant& ret) {
                 if (ret.toList()[0].toBool()) {
+                    emit logined();
                     pcg->to(to);
                 } else if (!error.isEmpty())
                     pcg->to(error);
@@ -90,9 +93,8 @@ CMSApi::login(const QString& token, QPointer<CallGraph> pcg, const QString& to,
 
 void
 CMSApi::addNode(const QVariant& pNode, const QVariantMap& nodeData,
-                QPointer<CallGraph> pcg, const QString& to,
-                const QString& error) {
-    if (!pcg.isNull() && !to.isEmpty())
+                CallGraph* pcg, const QString& to, const QString& error) {
+    if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod(CMSObjID("main"), "newNode", { pNode, nodeData })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
@@ -104,124 +106,158 @@ CMSApi::addNode(const QVariant& pNode, const QVariantMap& nodeData,
 }
 
 void
-CMSApi::removeNode(const QVariant& node, QPointer<CallGraph> pcg,
-                   const QString& to, const QString& error) {
+CMSApi::removeNode(const QVariant& node, CallGraph* pcg, const QString& to,
+                   const QString& error) {
     if (node.toInt() <= 0) {
-        if (!pcg.isNull() && !error.isEmpty())
+        if (pcg /*.isNull()*/ && !error.isEmpty())
             pcg->to(error, "can't remove \'..\' node");
-    } else if (!pcg.isNull() && !to.isEmpty())  //{
+    } else if (pcg /*.isNull()*/ && !to.isEmpty())  //{
         callMethod(CMSObjID("main"), "removeNode", { node })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, node);
-                } else if (!pcg.isNull() && !error.isEmpty())
+                    if (pcg /*.isNull()*/) pcg->to(to, node);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
                     pcg->to(error, d["error"]);
             });
 }
 
 void
-CMSApi::node(const QVariant& node, QPointer<CallGraph> pcg, const QString& to,
+CMSApi::refNode(const QVariant& node, CallGraph* pcg, const QString& to,
+                const QString& error) {
+    _node("refNode", node, pcg, to, error);
+}
+
+void
+CMSApi::refNodeInfo(const QVariant& node, CallGraph* pcg, const QString& to,
+                    const QString& error) {
+    _refNodeInfo("refNodeInfo", node, pcg, to, error);
+}
+
+void
+CMSApi::node(const QVariant& node, CallGraph* pcg, const QString& to,
              const QString& error) {
-    if (!pcg.isNull() && !to.isEmpty())
-        callMethod(CMSObjID("main"), "node", { node })
-            ->then([=](const QVariant& ret) {
-                QVariantMap d = ret.toList()[0].toMap();
-                if (d["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, d["node"]);
-                } else if (!pcg.isNull() && !error.isEmpty())
-                    pcg->to(error, d["error"]);
-            });
+    _node("node", node, pcg, to, error);
 }
 
 void
-CMSApi::nodeInfo(const QVariant& node, QPointer<CallGraph> pcg,
-                 const QString& to, const QString& error) {
-    if (!pcg.isNull() && !to.isEmpty())
-        callMethod(CMSObjID("main"), "nodeInfo", { node })
-            ->then([=](const QVariant& ret) {
-                QVariantList retList = ret.toList();
-                QVariantMap ret0 = retList[0].toMap();
-
-                if (ret0["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, ret0["node"]);
-                } else if (!pcg.isNull() && !error.isEmpty())
-                    pcg->to(error, ret0["error"]);
-            });
+CMSApi::nodeInfo(const QVariant& node, CallGraph* pcg, const QString& to,
+                 const QString& error) {
+    _refNodeInfo("nodeInfo", node, pcg, to, error);
 }
 
 void
-CMSApi::nodePath(const QVariant& node, QPointer<CallGraph> pcg,
-                 const QString& to) {
-    if (!pcg.isNull() && !to.isEmpty())
+CMSApi::nodePath(const QVariant& node, CallGraph* pcg, const QString& to) {
+    if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod(CMSObjID("main"), "nodePath", { node })
             ->then([=](const QVariant& ret) {
-                if (!pcg.isNull()) pcg->to(to, ret.toList()[0]);
+                if (pcg /*.isNull()*/) pcg->to(to, ret.toList()[0]);
             });
 }
 
 void
-CMSApi::loadNodes(const QVariant& pNode, QPointer<CallGraph> pcg,
-                  const QString& to, const QString& error) {
-    if (!pcg.isNull() && !to.isEmpty())
+CMSApi::loadNodes(const QVariant& pNode, CallGraph* pcg, const QString& to,
+                  const QString& error) {
+    if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod(CMSObjID("main"), "list", { pNode })
             ->then([=](const QVariant& ret) {
                 QVariant d = ret.toList()[0];
                 QVariantMap m = d.toMap();
                 if (m["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, d);
-                } else if (!pcg.isNull() && !error.isEmpty())
+                    if (pcg /*.isNull()*/) pcg->to(to, d);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
                     pcg->to(error, d);
             });
 }
 
 void
 CMSApi::updateNode(const QVariant& node, const QVariantMap& newData,
-                   QPointer<CallGraph> pcg, const QString& to,
-                   const QString& error) {
+                   CallGraph* pcg, const QString& to, const QString& error) {
     if (pcg && !to.isEmpty())
         callMethod(CMSObjID("main"), "updateNode", { node, newData })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, d["node"]);
-                } else if (!pcg.isNull() && !error.isEmpty())
+                    if (pcg /*.isNull()*/) pcg->to(to, d["node"]);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
                     pcg->to(error, d["error"]);
             });
 }
 
 void
-CMSApi::moveNode(const QVariant& source, const QVariant& target,
-                 QPointer<CallGraph> pcg, const QString& to,
-                 const QString& error) {
+CMSApi::moveNode(const QVariant& source, const QVariant& target, CallGraph* pcg,
+                 const QString& to, const QString& error) {
     if (source.toInt() <= 0) {
-        if (!pcg.isNull() && !error.isEmpty())
+        if (pcg /*.isNull()*/ && !error.isEmpty())
             pcg->to(error, "can't move \'..\' node");
-    } else if (!pcg.isNull() && !to.isEmpty())
+    } else if (pcg /*.isNull()*/ && !to.isEmpty())
         callMethod(CMSObjID("main"), "moveNode", { source, target })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, d["node"]);
-                } else if (!pcg.isNull() && !error.isEmpty())
+                    if (pcg /*.isNull()*/) pcg->to(to, d["node"]);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
                     pcg->to(error, d["error"]);
             });
 }
 
 void
-CMSApi::copyNode(const QVariant& source, const QVariant& target,
-                 QPointer<CallGraph> pcg, const QString& to,
-                 const QString& error) {
-    if (source.toInt() <= 0) {
-        if (!pcg.isNull() && !error.isEmpty())
-            pcg->to(error, "can't copy \'..\' node");
-    } else if (pcg && !to.isEmpty())
-        callMethod(CMSObjID("main"), "copyNode", { source, target })
+CMSApi::copyNode(const QVariant& source, const QVariant& target, CallGraph* pcg,
+                 const QString& to, const QString& error) {
+    _copyNode("copyNode", source, target, pcg, to, error);
+}
+
+void
+CMSApi::copyRefNode(const QVariant& source, const QVariant& target,
+                    CallGraph* pcg, const QString& to, const QString& error) {
+    _copyNode("copyRefNode", source, target, pcg, to, error);
+}
+
+void
+CMSApi::_node(const QString& method, const QVariant& node, CallGraph* pcg,
+              const QString& to, const QString& error) {
+    if (pcg && !to.isEmpty()) {
+        callMethod(CMSObjID("main"), method, { node })
             ->then([=](const QVariant& ret) {
                 QVariantMap d = ret.toList()[0].toMap();
                 if (d["ok"].toBool()) {
-                    if (!pcg.isNull()) pcg->to(to, d["node"]);
-                } else if (!pcg.isNull() && !error.isEmpty())
+                    if (pcg) pcg->to(to, d["node"]);
+                } else if (pcg && !error.isEmpty())
+                    pcg->to(error, d["error"]);
+            });
+    }
+}
+
+void
+CMSApi::_refNodeInfo(const QString& method, const QVariant& node,
+                     CallGraph* pcg, const QString& to, const QString& error) {
+    if (pcg /*.isNull()*/ && !to.isEmpty())
+        callMethod(CMSObjID("main"), method, { node })
+            ->then([=](const QVariant& ret) {
+                QVariantList retList = ret.toList();
+                QVariantMap ret0 = retList[0].toMap();
+
+                if (ret0["ok"].toBool()) {
+                    if (pcg /*.isNull()*/) pcg->to(to, ret0["node"]);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
+                    pcg->to(error, ret0["error"]);
+            });
+}
+
+void
+CMSApi::_copyNode(const QString& method, const QVariant& source,
+                  const QVariant& target, CallGraph* pcg, const QString& to,
+                  const QString& error) {
+    if (source.toInt() <= 0) {
+        if (pcg /*.isNull()*/ && !error.isEmpty())
+            pcg->to(error, "can't copy \'..\' node");
+    } else if (pcg && !to.isEmpty())
+        callMethod(CMSObjID("main"), method, { source, target })
+            ->then([=](const QVariant& ret) {
+                QVariantMap d = ret.toList()[0].toMap();
+                if (d["ok"].toBool()) {
+                    if (pcg /*.isNull()*/) pcg->to(to, d["node"]);
+                } else if (pcg /*.isNull()*/ && !error.isEmpty())
                     pcg->to(error, d["error"]);
             });
 }

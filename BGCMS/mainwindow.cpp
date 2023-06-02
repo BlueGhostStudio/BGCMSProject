@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QActionGroup>
 #include <QClipboard>
 #include <QDebug>
 #include <QDockWidget>
@@ -8,9 +9,11 @@
 #include <QPluginLoader>
 #include <QSettings>
 #include <QStandardPaths>
+#include <QTimer>
 #include <QToolButton>
 
 #include "../CMSPlugins/cmsplugininterface.h"
+#include "hosturldialog.h"
 #include "newnodedialog.h"
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
@@ -44,7 +47,22 @@ MainWindow::setCMSGrp() {
 
 void
 MainWindow::connect2Host() {
-    m_api.connectToHost(QUrl("wss://rpc.bgstudio.tk:8000"));
+    // m_api.connectToHost(QUrl("wss://rpc.bgstudio.live:8000"));
+    // m_api.connectToHost(QUrl("ws://72.167.55.234:8000"));
+    // m_api.connectToHost(QUrl("wss://rpc.bgstudio.live:8000"));
+    if (!m_api.isReconnected()) {
+        HostUrlDialog* urlDialog = new HostUrlDialog(this);
+        urlDialog->setUrl(QSettings().value("remote/host").toString());
+        QObject::connect(
+            urlDialog, &HostUrlDialog::finished, this, [=](int result) {
+                if (result == 1) {
+                    m_api.connectToHost(urlDialog->url());
+                    QSettings().setValue("remote/host", urlDialog->urlString());
+                }
+            });
+        urlDialog->open();
+    } else
+        m_api.connectToHost();
 }
 
 void
@@ -66,46 +84,50 @@ void
 MainWindow::changeAccount() {
     CallGraph::start("changeAccount", this)
         ->nodes("changeAccount",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     m_api.login(token(true), cg, "home", "loginErr");
                 })
         ->nodes("loginErr",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     qDebug() << "Login fail";
                     statusMessage(tr("Login fail"));
                     cg->to("home");
                 })
         ->nodes("home",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     ui_cmsBrowser->load("/", cg, "end", "end");
                 })
-        ->nodes("end",
-                [=](QPointer<CallGraph> cg, const QVariant&) { cg->toFinal(); })
+        ->nodes("end", [=](CallGraph* cg, const QVariant&) { cg->toFinal(); })
         ->exec();
+}
+
+void
+MainWindow::copyLinkFormatChanged() {
+    QSettings().setValue("copyLinkFormat",
+                         m_actgrpCopyLinkFormat->checkedAction()->data());
 }
 
 void
 MainWindow::newBlankNode() {
     CallGraph::start("openDlg", this)
         ->nodes("openDlg",
-                [=](QPointer<CallGraph> cg, const QVariant&) {
+                [=](CallGraph* cg, const QVariant&) {
                     NewNodeDialog* dlg =
                         new NewNodeDialog(cg, "accept", "", this);
                     dlg->open();
                 })
         ->nodes("accept",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     m_api.addNode(ui_cmsBrowser->listNode(), data.toMap(), cg,
                                   "end", "error");
                 })
         ->nodes("error",
-                [=](QPointer<CallGraph> cg, const QVariant& data) {
+                [=](CallGraph* cg, const QVariant& data) {
                     statusMessage(tr("ERROR: ") + data.toString());
 
                     cg->to("end");
                 })
-        ->nodes("end",
-                [=](QPointer<CallGraph> cg, const QVariant&) { cg->toFinal(); })
+        ->nodes("end", [=](CallGraph* cg, const QVariant&) { cg->toFinal(); })
         ->exec();
 }
 
@@ -129,39 +151,39 @@ MainWindow::initial() {
     action_remove->setEnabled(ui_cmsBrowser->hasSelection());
 
     QObject::connect(
-        &m_api, &CMSApi::isConnectedChanged, this, [=](bool status) {
+        &m_api, &CMSApi::isConnectedChanged, this,
+        [=](bool status, bool reconnected) {
             if (status) {
                 CallGraph::start("afterConnected", this)
                     ->nodes("afterConnected",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 m_api.join(cg, "afterJoin");
-                                // join(&BGCMSClient, cg, "afterJoin");
                             })
                     ->nodes("afterJoin",
-                            [=](QPointer<CallGraph> cg, const QVariant& data) {
-                                // BGCMSClient.setProperty("cID", data);
+                            [=](CallGraph* cg, const QVariant& data) {
                                 m_api.setProperty("cID", data);
                                 cg->to("login");
                             })
                     ->nodes("login",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
-                                // m_api.login("bgstudio", cg, "home",
-                                // "loginErr"); qDebug() << "---- token ----" <<
-                                // token();
-                                m_api.login(token(), cg, "home", "loginErr");
+                            [=](CallGraph* cg, const QVariant&) {
+                                QString to = reconnected ? "updateUi" : "home";
+                                m_api.login(token(), cg, to, "loginErr");
                             })
                     ->nodes("loginErr",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 statusMessage(tr("Login fail"));
-                                cg->to("home");
+                                if (!reconnected)
+                                    cg->to("home");
+                                else
+                                    cg->to("updateUi");
                             })
                     ->nodes("home",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 ui_cmsBrowser->load("/", cg, "updateUi",
                                                     "updateUi");
                             })
                     ->nodes("updateUi",
-                            [=](QPointer<CallGraph> cg, const QVariant&) {
+                            [=](CallGraph* cg, const QVariant&) {
                                 uiConnectStatus(true);
                                 cg->toFinal();
                             })
@@ -232,12 +254,39 @@ MainWindow::initial() {
     action_copy->setEnabled(false);
     action_cut->setEnabled(false);
     action_paste->setEnabled(hasClip());
-    QObject::connect(clipboard, &QClipboard::dataChanged, this,
-                     [=]() { action_paste->setEnabled(hasClip()); });
+    action_paste_reference->setEnabled(hasClip(true));
+    QObject::connect(clipboard, &QClipboard::dataChanged, this, [=]() {
+        action_paste->setEnabled(hasClip());
+        action_paste_reference->setEnabled(hasClip(true));
+    });
+
+    m_actgrpCopyLinkFormat = new QActionGroup(this);
+    action_copy_link_href->setData(0);
+    m_actgrpCopyLinkFormat->addAction(action_copy_link_href);
+    action_copy_link_html->setData(1);
+    m_actgrpCopyLinkFormat->addAction(action_copy_link_html);
+    action_copy_link_md->setData(2);
+    m_actgrpCopyLinkFormat->addAction(action_copy_link_md);
+    action_copy_link_id->setData(3);
+    m_actgrpCopyLinkFormat->addAction(action_copy_link_id);
+
+    switch (settings.value("copyLinkFormat", 0).toInt()) {
+    case 0:
+        action_copy_link_href->setChecked(true);
+        break;
+    case 1:
+        action_copy_link_html->setChecked(true);
+        break;
+    case 2:
+        action_copy_link_md->setChecked(true);
+        break;
+    case 3:
+        action_copy_link_id->setChecked(true);
+    }
 
     m_connectedPixmap.load(":/imgs/connected.png");
     m_disconnectedPixmap.load(":/imgs/disconnected.png");
-    m_connectStatus = new QLabel;
+    m_connectStatus = new QLabel(this);
     m_connectStatus->setPixmap(m_disconnectedPixmap);
     ui_statusbar->addPermanentWidget(m_connectStatus);
 
@@ -268,6 +317,7 @@ MainWindow::initialPlugins() {
                 _pluginUI.pluginsMenu = ui_menu_plugins;
                 _pluginUI.settingMenu = ui_menu_settings;
                 _pluginUI.pluginsToolbar = ui_tb_plugins;
+                _pluginUI.mainWindow = this;
                 _pluginUI = obj->initial(&m_api, ui_cmsBrowser, _pluginUI);
                 QWidget* pluginDocker = _pluginUI.docker;
                 QObject::connect(instance, SIGNAL(logMessage(QString, int)),
@@ -275,7 +325,6 @@ MainWindow::initialPlugins() {
                 QObject::connect(instance, SIGNAL(working(bool)), this,
                                  SLOT(uiWorkStatus(bool)));
                 if (pluginDocker) {
-                    qDebug() << "has plugin widget";
                     QDockWidget* pluginDock = new QDockWidget;
                     bool ok = false;
                     int area =
@@ -286,6 +335,10 @@ MainWindow::initialPlugins() {
                     addDockWidget(
                         ok ? (Qt::DockWidgetArea)area : Qt::RightDockWidgetArea,
                         pluginDock);
+
+                    pluginDock->setEnabled(false);
+                    QObject::connect(&m_api, &CMSApi::isConnectedChanged,
+                                     pluginDock, &QDockWidget::setEnabled);
                 }
             } else
                 statusMessage(tr("Load plugin fail"));
@@ -302,8 +355,7 @@ MainWindow::initialPlugins() {
     qDebug() << DATALOCATION;
 #endif
 
-    foreach (const QString& location, dataLocations)
-        loadPlugins(location);
+    foreach (const QString& location, dataLocations) loadPlugins(location);
 }
 
 void
@@ -325,13 +377,16 @@ MainWindow::uiStatus(bool enabled) {
 }
 
 bool
-MainWindow::hasClip() const {
+MainWindow::hasClip(bool ref) const {
     QClipboard* clipboard = QGuiApplication::clipboard();
     const QMimeData* mimeData = clipboard->mimeData();
 
-    return mimeData->hasFormat(__MIME_COPY__) ||
-           mimeData->hasFormat(__MIME_CUT__) ||
-           mimeData->hasFormat(__MIME_PLUGIN__);
+    if (ref)
+        return mimeData->hasFormat(__MIME_COPY__);
+    else
+        return mimeData->hasFormat(__MIME_COPY__) ||
+               mimeData->hasFormat(__MIME_CUT__) ||
+               mimeData->hasFormat(__MIME_PLUGIN__);
 }
 
 QString

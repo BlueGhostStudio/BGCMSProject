@@ -25,8 +25,10 @@ find_package(
 
 include_directories(../../CallGraph ../../BGMRPCClient)
 
-add_library(CMSFilter SHARED CMSFilter_global.h cmsfilter.cpp cmsfilter.h
-                             filterform.h filterform.cpp filterform.ui)
+#add_library(CMSFilter SHARED CMSFilter_global.h cmsfilter.cpp cmsfilter.h
+#                             filterform.h filterform.cpp filterform.ui)
+
+add_library(CMSFilter SHARED CMSFilter_global.h cmsfilter.cpp cmsfilter.h)
 
 target_link_libraries(
   CMSFilter
