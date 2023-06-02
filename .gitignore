@@ -33,6 +33,8 @@ qrc_*.cpp
 Thumbs.db
 *.res
 *.rc
+.*
+CMSPlugins/CMSPreview/backup/*
 /.qmake.cache
 /.qmake.stash
 
