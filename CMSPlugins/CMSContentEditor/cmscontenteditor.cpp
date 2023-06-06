@@ -41,6 +41,7 @@ CMSContentEditor::initial(CMSApi* api, CMSBrowserBase* browser,
                                                                 << "md"
                                                                 << "cmp"
                                                                 << "fra"
+                                                                << "elm"
                                                                 << "pkg"
                                                                 << "style");
 
@@ -80,11 +81,12 @@ CMSContentEditor::initial(CMSApi* api, CMSBrowserBase* browser,
     editMenu->addAction(tr("Syntax - html"), this, [=]() {
         QString syntaxsText;
         bool begin = true;
-        foreach (const QVariant& type,
-                 m_settings
-                     .value("contentEditor/syntax/html",
-                            QVariantList({ "html", "fra", "cmp", "pkg" }))
-                     .toList()) {
+        foreach (
+            const QVariant& type,
+            m_settings
+                .value("contentEditor/syntax/html",
+                       QVariantList({ "html", "fra", "cmp", "pkg", "elm" }))
+                .toList()) {
             if (begin)
                 begin = false;
             else
