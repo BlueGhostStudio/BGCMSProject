@@ -56,4 +56,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS CMSMedia
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

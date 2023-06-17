@@ -54,4 +54,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS Todo
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

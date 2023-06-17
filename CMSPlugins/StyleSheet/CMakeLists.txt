@@ -49,4 +49,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS StyleSheet
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

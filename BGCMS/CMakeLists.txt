@@ -40,7 +40,7 @@ include_directories(../CallGraph ../BGMRPCClient)
 
 include(../BGCMS.cmake)
 
-add_compile_definitions(DATALOCATION="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/BGStudio/BGCMS")
+add_compile_definitions(CMSDATALOCATION="${CMSDATALOCATION}")
 
 set(PROJECT_SOURCES
     main.cpp
@@ -111,5 +111,5 @@ endif()
 install(
   TARGETS BGCMS
   RUNTIME
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/BGCMS/${CMAKE_INSTALL_BINDIR}
     COMPONENT BGCMS)

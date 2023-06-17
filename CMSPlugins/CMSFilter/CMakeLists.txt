@@ -47,4 +47,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS CMSFilter
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

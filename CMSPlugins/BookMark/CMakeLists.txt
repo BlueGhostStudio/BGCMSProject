@@ -52,4 +52,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS BookMark
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

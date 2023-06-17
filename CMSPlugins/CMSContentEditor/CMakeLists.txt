@@ -63,4 +63,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS CMSContentEditor
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)

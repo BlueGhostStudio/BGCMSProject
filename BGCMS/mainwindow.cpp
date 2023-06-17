@@ -348,11 +348,11 @@ MainWindow::initialPlugins() {
     QStringList dataLocations =
         QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation);
 
-#ifdef DATALOCATION
-    if (!dataLocations.contains(DATALOCATION))
-        dataLocations.append(DATALOCATION);
+#ifdef CMSDATALOCATION
+    if (!dataLocations.contains(CMSDATALOCATION))
+        dataLocations.append(CMSDATALOCATION);
 
-    qDebug() << DATALOCATION;
+    qDebug() << CMSDATALOCATION;
 #endif
 
     foreach (const QString& location, dataLocations) loadPlugins(location);

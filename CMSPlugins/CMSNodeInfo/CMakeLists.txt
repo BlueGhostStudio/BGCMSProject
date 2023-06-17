@@ -53,4 +53,4 @@ set_target_properties(
 include(../../BGCMS.cmake)
 
 install(TARGETS CMSNodeInfo
-        LIBRARY DESTINATION ${DATALOCATION}/plugins)
+        LIBRARY DESTINATION ${CMSDATALOCATION}/plugins)
